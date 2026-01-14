@@ -735,7 +735,13 @@ var AVPlayer = (function() {
             return url;
         }
         
-        // In browser, proxy HLS streams to avoid CORS
+        // NEVER proxy BBNL livestream URLs - they require HTTP/3 and direct access
+        if (url.indexOf('livestream.bbnl.in') !== -1) {
+            log('BBNL stream detected - using direct URL (HTTP/3 required)');
+            return url;
+        }
+        
+        // In browser, proxy HLS streams to avoid CORS (only for non-BBNL streams)
         if (url.indexOf('.m3u8') !== -1 && url.indexOf('/stream?') === -1) {
             // Determine proxy base URL
             var proxyBase = '';

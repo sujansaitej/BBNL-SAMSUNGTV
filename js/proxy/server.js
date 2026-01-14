@@ -54,14 +54,15 @@ const AUTH_BASE_URL = 'http://124.40.244.211/netmon/cabletvapis';
 // Ads API uses this base URL
 const ADS_BASE_URL = 'https://bbnlnetmon.bbnl.in/prod/cabletvapis';
 
-// Common headers for auth/channel APIs
+// Common headers for ALL APIs (auth, channel, ads)
 const AUTH_HEADERS = {
   'Authorization': 'Basic Zm9maWxhYkBnbWFpbC5jb206MTIzNDUtNTQzMjE=',
   'Content-Type': 'application/json',
-  'devslno': 'FOFI20191129000336'
+  'devslno': 'FOFI20191129000336',
+  'devmac': '68:1D:EF:14:6C:21'
 };
 
-// Headers for ads API (includes devmac)
+// Headers for ads API (same as AUTH_HEADERS)
 const ADS_HEADERS = {
   'Authorization': 'Basic Zm9maWxhYkBnbWFpbC5jb206MTIzNDUtNTQzMjE=',
   'Content-Type': 'application/json',
@@ -92,9 +93,29 @@ app.get('/stream', async (req, res) => {
       responseType: 'arraybuffer',
       timeout: 30000,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Referer': 'https://livestream.bbnl.in/',
+        'Origin': 'https://livestream.bbnl.in',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      },
+      validateStatus: function (status) {
+        return status < 500; // Resolve on any status < 500
       }
     });
+
+    // Check for successful response
+    if (response.status >= 400) {
+      console.error(`❌ Stream API Error: Status ${response.status}`);
+      console.error('Response:', response.data.toString('utf8').substring(0, 200));
+      return res.status(response.status).json({ 
+        error: `Stream server returned error ${response.status}`,
+        details: 'The stream may be restricted or unavailable'
+      });
+    }
 
     // Set appropriate content type
     const contentType = response.headers['content-type'] || 'application/vnd.apple.mpegurl';
@@ -116,15 +137,25 @@ app.get('/stream', async (req, res) => {
         return `/stream?url=${encodeURIComponent(baseUrl + p1)}`;
       });
       
+      console.log(`✅ Stream Playlist loaded successfully`);
       res.send(content);
     } else {
       // For .ts segments, send as-is
+      console.log(`✅ Stream segment delivered`);
       res.send(response.data);
     }
     
   } catch (err) {
     console.error(`❌ Stream Proxy Error: ${err.message}`);
-    res.status(500).json({ error: 'Stream fetch failed', message: err.message });
+    if (err.response) {
+      console.error(`   Status: ${err.response.status}`);
+      console.error(`   Headers:`, err.response.headers);
+    }
+    res.status(500).json({ 
+      error: 'Stream fetch failed', 
+      message: err.message,
+      hint: 'The stream may require authentication or be geographically restricted'
+    });
   }
 });
 
