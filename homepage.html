@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Home</title>
+    <!-- Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/forms.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/homepages.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <!-- API Files -->
+    <script src="api/config.js"></script>
+    <script src="api/auth.js"></script>
+    <script src="api/channels.js"></script>
+    <script src="api/ads.js"></script>
+    <style>
+        /* Channel Card Styles for Homepage */
+        .channel-card-home {
+            flex-shrink: 0;
+            width: 160px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .channel-card-home:hover {
+            transform: scale(1.05);
+        }
+
+        .channel-card-inner-home {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .channel-card-inner-home img {
+            max-width: 100px;
+            max-height: 80px;
+            object-fit: contain;
+        }
+
+        .channel-card-inner-home .no-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+        }
+
+        .channel-card-inner-home .no-image i {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .live-badge-home {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #ff0000;
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .live-badge-home::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .channel-name-home {
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .channel-type-home {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .view-all-card {
+            flex-shrink: 0;
+            width: 160px;
+            cursor: pointer;
+        }
+
+        .view-all-inner {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .view-all-inner span {
+            margin-bottom: 8px;
+        }
+
+        /* Ads Hero Slider Styles */
+        .ads-hero-slider {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ads-hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s;
+        }
+
+        .ads-hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+        }
+
+        .ads-hero-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .ads-hero-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .ads-hero-dot:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .ads-hero-dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+
+        /* Legacy ads slider styles */
+        .ads-slider-container {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .ads-slider {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+
+        .ads-slide {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.5s;
+        }
+
+        .ads-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+
+        .ads-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+
+        .ads-dot.active {
+            background: #fff;
+        }
+
+        /* Sidebar Submenu Styles */
+        .sidebar-menu-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-menu-item.has-submenu {
+            position: relative;
+        }
+
+        .submenu-arrow {
+            margin-left: auto;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-menu-item.has-submenu.active .submenu-arrow {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-submenu {
+            display: none;
+            flex-direction: column;
+            padding-left: 20px;
+        }
+
+        .sidebar-submenu.show {
+            display: flex;
+        }
+
+        .sidebar-submenu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-submenu-item i {
+            margin-right: 12px;
+            font-size: 14px;
+            width: 20px;
+        }
+
+        .sidebar-submenu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">BBNL</div>
+            <button class="menu-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search for movies, TV shoes...">
+        </div>
+        <div class="header-right">
+            <div class="dark-mode-toggle">
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle-checkbox" class="theme-toggle-input" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button class="header-pill-btn" id="network-btn"><i class="fas fa-wifi"></i> Network</button>
+            <button class="header-icon-btn" onclick="window.location.href='settings.html'" title="Settings"><i
+                    class="fas fa-cog"></i></button>
+            <div class="profile-menu" id="profile-menu-container">
+                <img src="https://i.pravatar.cc/150?u=alex" alt="User" id="current-profile-avatar">
+            </div>
+        </div>
+    </header>
+
+    <div role="main" class="content-area">
+        <!-- Hero Banner Section -->
+        <section class="home-hero-section" id="ads-hero-section">
+            <div class="hero-bg-overlay"></div>
+            <div class="hero-content">
+                <h1>The Batman</h1>
+                <p class="subtitle">Superhero - 2022</p>
+                <p class="description">noir-inspired reboot of the iconic superhero, directed by Matt Reeves and
+                    starring Robert Pattinson as a younger, more emotionally raw Bruce Wayne. Set during Batman's second
+                    year of crime-fighting.</p>
+                <div class="tags">
+                    <span class="tag">Sci-fi</span>
+                    <span class="tag">Thriller</span>
+                    <span class="tag">Drama</span>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-watch" onclick="window.location.href='player.html?title=The%20Batman'">
+                        <i class="fas fa-play"></i> Watch Now
+                    </button>
+                    <button class="btn-add">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-carousel">
+            <h2>Your OTT Apps</h2>
+            <div class="media-scroll-container">
+                <!-- JioHotstar -->
+                <div class="media-item">
+                    <div class="media-icon-box gradient-purple">
+                        <img src="https://img.hotstar.com/image/upload/v1656431456/web-images/logo-d-plus.svg"
+                            alt="JioHotstar" class="ott-logo">
+                    </div>
+                    <div class="media-info">
+                        <h3>jioHotstart</h3>
+                        <p>Streaming Secrvices</p>
+                    </div>
+                </div>
+
+                <!-- Prime Video (Active/Selected) -->
+                <div class="media-item active">
+                    <div class="media-icon-box gradient-blue">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f1/Prime_Video.png" alt="Prime Video"
+                            class="ott-logo">
+                    </div>
+                    <div class="media-info">
+                        <h3>Prime Video</h3>
+                        <p>Streaming Secrvices</p>
+                    </div>
+                </div>
+
+                <!-- Netflix -->
+                <div class="media-item">
+                    <div class="media-icon-box black-bg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+                            alt="Netflix" class="ott-logo">
+                    </div>
+                    <div class="media-info">
+                        <h3>Netflix</h3>
+                        <p>Streaming Secrvices</p>
+                    </div>
+                </div>
+
+                <!-- Apple TV -->
+                <div class="media-item">
+                    <div class="media-icon-box black-bg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Apple_logo_grey.svg/1724px-Apple_logo_grey.svg.png"
+                            alt="Apple TV" class="ott-logo white-filter" style="max-height: 40%;">
+                    </div>
+                    <div class="media-info">
+                        <h3>Apple Tv</h3>
+                        <p>Streaming Secrvices</p>
+                    </div>
+                </div>
+
+                <!-- View All OTT -->
+                <div class="media-item" onclick="window.location.href='apps.html'">
+                    <div class="media-icon-box view-all-box">
+                        <span>View All Ott</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="media-info">
+                        <h3>View All Ott</h3>
+                        <p>Streaming Secrvices</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-carousel">
+            <h2>Live TV Channels</h2>
+            <div class="media-scroll-container" id="live-channels-container">
+                <!-- Udhaya TV -->
+                <div class="media-item" onclick="window.location.href='player.html?title=Udhaya%20TV'">
+                    <div class="media-icon-box white-bg">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Udaya_TV_Logo.svg/200px-Udaya_TV_Logo.svg.png"
+                            alt="Udhaya TV" class="channel-logo-img">
+                    </div>
+                    <div class="media-info">
+                        <h3>Udhaya TV</h3>
+                        <p>live Channals</p>
+                    </div>
+                </div>
+
+                <!-- Colors Super TV -->
+                <div class="media-item" onclick="window.location.href='player.html?title=Colors%20Super%20TV'">
+                    <div class="media-icon-box white-bg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Colors_Super.svg/200px-Colors_Super.svg.png"
+                            alt="Colors Super TV" class="channel-logo-img">
+                    </div>
+                    <div class="media-info">
+                        <h3>Colors Super TV</h3>
+                        <p>live Channals</p>
+                    </div>
+                </div>
+
+                <!-- Zee-kanada -->
+                <div class="media-item" onclick="window.location.href='player.html?title=Zee-kanada'">
+                    <div class="media-icon-box white-bg">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Zee_Kannada_2017.svg/200px-Zee_Kannada_2017.svg.png"
+                            alt="Zee-kanada" class="channel-logo-img">
+                    </div>
+                    <div class="media-info">
+                        <h3>Zee-kanada</h3>
+                        <p>live Channals</p>
+                    </div>
+                </div>
+
+                <!-- Gemini TV -->
+                <div class="media-item" onclick="window.location.href='player.html?title=Gemini%20TV'">
+                    <div class="media-icon-box white-bg">
+                        <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f0/Gemini_TV.svg/200px-Gemini_TV.svg.png"
+                            alt="Gemini TV" class="channel-logo-img">
+                    </div>
+                    <div class="media-info">
+                        <h3>Gemini TV</h3>
+                        <p>live Channals</p>
+                    </div>
+                </div>
+
+                <!-- View All Channels -->
+                <div class="media-item" onclick="window.location.href='tv-channels.html'">
+                    <div class="media-icon-box view-all-box">
+                        <span>View All<br>Channel</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                    <div class="media-info">
+                        <h3>View All Channels</h3>
+                        <p>Live Channels</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu" class="sidebar-menu">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu-header">
+                <div class="logo">BBNL</div>
+                <button class="close-sidebar" id="close-sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-menu-nav">
+                <a href="homepage.html" class="sidebar-menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="tv-channels.html" class="sidebar-menu-item">
+                    <i class="fas fa-tv"></i>
+                    <span>Live Channels</span>
+                </a>
+                <a href="movies.html" class="sidebar-menu-item">
+                    <i class="fas fa-film"></i>
+                    <span>Movies</span>
+                </a>
+                <a href="subscriptions.html" class="sidebar-menu-item">
+                    <i class="fas fa-gem"></i>
+                    <span>Subscription</span>
+                </a>
+                <a href="favorites.html" class="sidebar-menu-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorites</span>
+                </a>
+                <a href="notifications.html" class="sidebar-menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notification</span>
+                </a>
+
+                <!-- Help Desk with Submenu -->
+                <div class="sidebar-menu-group">
+                    <a href="#" class="sidebar-menu-item has-submenu" id="helpdesk-toggle">
+                        <i class="fas fa-headset"></i>
+                        <span>Help Desk</span>
+                        <i class="fas fa-chevron-down submenu-arrow"></i>
+                    </a>
+                    <div class="sidebar-submenu" id="helpdesk-submenu">
+                        <a href="help-desk.html" class="sidebar-submenu-item">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Get Complaint</span>
+                        </a>
+                        <a href="give-feedback.html" class="sidebar-submenu-item">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>Get Feedback</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+        </div>
+    </div>
+
+    <!-- Network Settings Modal -->
+    <div id="network-modal" class="network-modal" style="display: none;">
+        <div class="network-modal-content">
+            <div class="network-modal-header">
+                <h3>Network Settings</h3>
+                <button class="close-modal" id="close-network-modal">
+                    <span style="font-size: 20px; font-weight: bold; color: currentColor;">&times;</span>
+                </button>
+            </div>
+
+            <div class="network-option">
+                <div class="network-option-icon">
+                    <i class="fas fa-wifi" style="color: #3b82f6;"></i>
+                </div>
+                <div class="network-option-content">
+                    <h4>WiFi</h4>
+                    <p>Connected to Home-5GHz</p>
+                </div>
+                <button class="network-option-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="network-option">
+                <div class="network-option-icon">
+                    <i class="fas fa-network-wired" style="color: #b0bec5;"></i>
+                </div>
+                <div class="network-option-content">
+                    <h4>Wired Network</h4>
+                    <p>Disconnected</p>
+                </div>
+                <button class="network-option-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Help Desk Submenu Toggle (ES5 Compatible)
+        var helpdeskToggle = document.getElementById('helpdesk-toggle');
+        var helpdeskSubmenu = document.getElementById('helpdesk-submenu');
+
+        if (helpdeskToggle && helpdeskSubmenu) {
+            helpdeskToggle.addEventListener('click', function (e) {
+                e.preventDefault();
+                helpdeskToggle.classList.toggle('active');
+                helpdeskSubmenu.classList.toggle('show');
+            });
+        }
+
+        // Sidebar Menu
+        var sidebarToggle = document.getElementById('sidebar-toggle');
+        var sidebarMenu = document.getElementById('sidebar-menu');
+        var closeSidebar = document.getElementById('close-sidebar');
+        var sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function openSidebar() {
+            sidebarMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebarMenu() {
+            sidebarMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        sidebarToggle.addEventListener('click', openSidebar);
+        closeSidebar.addEventListener('click', closeSidebarMenu);
+        sidebarOverlay.addEventListener('click', closeSidebarMenu);
+
+        // Network Modal
+        var networkBtn = document.getElementById('network-btn');
+        var networkModal = document.getElementById('network-modal');
+        var closeNetworkModal = document.getElementById('close-network-modal');
+
+        networkBtn.addEventListener('click', function () {
+            networkModal.style.display = 'flex';
+        });
+
+        closeNetworkModal.addEventListener('click', function () {
+            networkModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        networkModal.addEventListener('click', function (e) {
+            if (e.target === networkModal) {
+                networkModal.style.display = 'none';
+            }
+        });
+
+        // Make Media Items Clickable (Navigate to Player)
+        var mediaItems = document.querySelectorAll('.media-item');
+        for (var mi = 0; mi < mediaItems.length; mi++) {
+            (function (item) {
+                // Check if it's the view-all card
+                if (item.querySelector('.view-all-box')) return;
+
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', function (e) {
+                    // Prevent if clicking the favorite heart
+                    if (e.target.closest('.favorite-icon-overlay') || e.target.classList.contains('fa-heart')) {
+                        return;
+                    }
+
+                    var titleEl = item.querySelector('h3');
+                    var title = titleEl ? titleEl.innerText : 'Unknown Title';
+                    window.location.href = 'player.html?title=' + encodeURIComponent(title);
+                });
+            })(mediaItems[mi]);
+        }
+
+        // Profile Switcher
+        var profileMenuContainer = document.getElementById('profile-menu-container');
+        var profileDropdown = document.getElementById('profile-dropdown');
+        var currentProfileAvatar = document.getElementById('current-profile-avatar');
+        var profileItems = document.querySelectorAll('.profile-dropdown-item');
+
+        // Load saved profile
+        var savedProfile = localStorage.getItem('bbnl-current-profile') || 'alex';
+        var savedAvatar = localStorage.getItem('bbnl-current-avatar') || 'https://i.pravatar.cc/150?u=alex';
+        currentProfileAvatar.src = savedAvatar;
+
+        // Update active profile indicator
+        function updateActiveProfile(profileName) {
+            for (var pi = 0; pi < profileItems.length; pi++) {
+                var item = profileItems[pi];
+                var badge = item.querySelector('.profile-dropdown-badge');
+                var check = item.querySelector('.profile-check');
+
+                if (item.getAttribute('data-profile') === profileName) {
+                    if (!badge) {
+                        var newBadge = document.createElement('span');
+                        newBadge.className = 'profile-dropdown-badge';
+                        newBadge.textContent = 'Active';
+                        item.querySelector('.profile-dropdown-info').appendChild(newBadge);
+                    }
+                    if (check) check.style.display = 'block';
+                } else {
+                    if (badge) badge.remove();
+                    if (check) check.style.display = 'none';
+                }
+            }
+        }
+
+        updateActiveProfile(savedProfile);
+
+        // Toggle profile dropdown
+        profileMenuContainer.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var isVisible = profileDropdown.style.display === 'flex';
+            profileDropdown.style.display = isVisible ? 'none' : 'flex';
+        });
+
+        // Profile selection
+        for (var ps = 0; ps < profileItems.length; ps++) {
+            profileItems[ps].addEventListener('click', function (e) {
+                e.stopPropagation();
+                var profileName = this.getAttribute('data-profile');
+                var avatarUrl = this.getAttribute('data-avatar');
+
+                // Save to localStorage
+                localStorage.setItem('bbnl-current-profile', profileName);
+                localStorage.setItem('bbnl-current-avatar', avatarUrl);
+
+                // Update avatar
+                currentProfileAvatar.src = avatarUrl;
+
+                // Update active indicator
+                updateActiveProfile(profileName);
+
+                // Close dropdown
+                profileDropdown.style.display = 'none';
+
+                // Optional: Add console log for demo
+                console.log('Switched to profile: ' + profileName);
+            });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!profileDropdown.contains(e.target) && !profileMenuContainer.contains(e.target)) {
+                profileDropdown.style.display = 'none';
+            }
+        });
+
+        // Navbar Link Navigation
+        var navLinks = document.querySelectorAll('.nav-link');
+
+        for (var nl = 0; nl < navLinks.length; nl++) {
+            navLinks[nl].addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remove active class from all links
+                for (var nli = 0; nli < navLinks.length; nli++) {
+                    navLinks[nli].classList.remove('active');
+                }
+
+                // Add active class to clicked link
+                this.classList.add('active');
+
+                // Get section to navigate to
+                var section = this.getAttribute('data-section');
+                console.log('Navigating to section:', section);
+
+                // Here you would implement actual section navigation
+                // For now, we'll just log the action
+                alert('Navigating to ' + section + ' section');
+            });
+        }
+
+        // ========================================
+        // Load Live TV Channels from API (ES5)
+        // ========================================
+        function loadLiveChannels() {
+            var container = document.getElementById('live-channels-container');
+            var loading = document.getElementById('channels-loading-home');
+
+            console.log('Loading channels for homepage...');
+
+            // Check if ChannelsAPI is available
+            if (typeof ChannelsAPI === 'undefined') {
+                console.warn('ChannelsAPI not available');
+                renderFallbackChannels(container);
+                return;
+            }
+
+            ChannelsAPI.getChannelData().then(function (result) {
+                if (result.success && result.channels.length > 0) {
+                    renderHomeChannels(container, result.channels.slice(0, 4));
+                    console.log('Channels loaded:', result.channels.length);
+                } else {
+                    console.warn('No channels from API, using fallback');
+                    renderFallbackChannels(container);
+                }
+            }, function (error) {
+                console.error('Failed to load channels:', error);
+                renderFallbackChannels(container);
+            });
+        }
+
+        function renderHomeChannels(container, channels) {
+            var html = '';
+
+            for (var ci = 0; ci < channels.length; ci++) {
+                var channel = channels[ci];
+                var hasStream = !!channel.streamlink;
+                var logoUrl = channel.chlogo || '';
+                var channelTitle = channel.chtitle || 'Channel';
+                var streamLink = channel.streamlink || '';
+
+                html += '<div class="channel-card-home" onclick="playChannel(\'' + streamLink.replace(/'/g, "\\'") + '\', \'' + channelTitle.replace(/'/g, "\\'") + '\')">' +
+                    '<div class="channel-card-inner-home">' +
+                    (hasStream ? '<span class="live-badge-home">Live</span>' : '');
+
+                if (logoUrl) {
+                    html += '<img src="' + logoUrl + '" alt="' + channelTitle + '" onerror="this.parentElement.innerHTML=\'<div class=\\\'no-image\\\'><i class=\\\'fas fa-tv\\\'></i><span>No Image</span></div>\'">';
+                } else {
+                    html += '<div class="no-image"><i class="fas fa-tv"></i><span>No Image</span></div>';
+                }
+
+                html += '</div>' +
+                    '<p class="channel-name-home">' + channelTitle + '</p>' +
+                    '<p class="channel-type-home">live Channels</p>' +
+                    '</div>';
+            }
+
+            // Add View All card
+            html += '<div class="view-all-card" onclick="window.location.href=\'tv-channels.html\'">' +
+                '<div class="view-all-inner">' +
+                '<span>View All Channel</span>' +
+                '<i class="fas fa-arrow-right"></i>' +
+                '</div>' +
+                '<p class="channel-name-home">View All Channels</p>' +
+                '<p class="channel-type-home">Live Channels</p>' +
+                '</div>';
+
+            container.innerHTML = html;
+        }
+
+        function renderFallbackChannels(container) {
+            container.innerHTML = '<div class="channel-card-home" onclick="window.location.href=\'tv-channels.html\'">' +
+                '<div class="channel-card-inner-home">' +
+                '<span class="live-badge-home">Live</span>' +
+                '<div class="no-image"><i class="fas fa-tv"></i><span>No Image</span></div>' +
+                '</div>' +
+                '<p class="channel-name-home">Channel 1</p>' +
+                '<p class="channel-type-home">live Channels</p>' +
+                '</div>' +
+                '<div class="view-all-card" onclick="window.location.href=\'tv-channels.html\'">' +
+                '<div class="view-all-inner">' +
+                '<span>View All Channel</span>' +
+                '<i class="fas fa-arrow-right"></i>' +
+                '</div>' +
+                '<p class="channel-name-home">View All Channels</p>' +
+                '<p class="channel-type-home">Live Channels</p>' +
+                '</div>';
+        }
+
+        function playChannel(streamUrl, title) {
+            if (streamUrl) {
+                window.location.href = 'player.html?stream=' + encodeURIComponent(streamUrl) + '&title=' + encodeURIComponent(title);
+            } else {
+                alert('Stream not available for this channel');
+            }
+        }
+
+        // ========================================
+        // Load Ads from API - Hero Section (ES5)
+        // ========================================
+        function loadAds() {
+            var heroSection = document.getElementById('ads-hero-section');
+            var placeholder = document.getElementById('ads-loading-placeholder');
+
+            console.log('Loading ads for homepage hero...');
+
+            if (typeof AdsAPI === 'undefined') {
+                console.warn('AdsAPI not available');
+                showFallbackHero();
+                return;
+            }
+
+            AdsAPI.getIPTVAds().then(function (result) {
+                if (result.success && result.ads.length > 0) {
+                    // Create full-screen ads slider in hero section
+                    renderAdsHero(result.ads);
+                    console.log('Ads hero created with', result.ads.length, 'ads');
+                } else {
+                    console.warn('No ads available, showing fallback');
+                    showFallbackHero();
+                }
+            }, function (error) {
+                console.error('Failed to load ads:', error);
+                showFallbackHero();
+            });
+        }
+
+        function renderAdsHero(ads) {
+            var heroSection = document.getElementById('ads-hero-section');
+
+            var dotsHtml = '';
+            for (var di = 0; di < ads.length; di++) {
+                dotsHtml += '<span class="ads-hero-dot ' + (di === 0 ? 'active' : '') + '" data-index="' + di + '"></span>';
+            }
+
+            heroSection.innerHTML = '<div class="ads-hero-slider">' +
+                '<img src="' + ads[0] + '" alt="Advertisement" class="ads-hero-image" id="ads-hero-img">' +
+                '<div class="ads-hero-overlay"></div>' +
+                '<div class="ads-hero-dots">' + dotsHtml + '</div>' +
+                '</div>';
+
+            // Auto-rotate ads
+            var currentIndex = 0;
+            var slideImg = document.getElementById('ads-hero-img');
+            var dots = heroSection.querySelectorAll('.ads-hero-dot');
+
+            setInterval(function () {
+                currentIndex = (currentIndex + 1) % ads.length;
+                slideImg.src = ads[currentIndex];
+                for (var dj = 0; dj < dots.length; dj++) {
+                    if (dj === currentIndex) {
+                        dots[dj].classList.add('active');
+                    } else {
+                        dots[dj].classList.remove('active');
+                    }
+                }
+            }, 5000);
+
+            // Click handlers for dots
+            for (var dk = 0; dk < dots.length; dk++) {
+                dots[dk].addEventListener('click', function (e) {
+                    currentIndex = parseInt(e.target.getAttribute('data-index'));
+                    slideImg.src = ads[currentIndex];
+                    for (var dl = 0; dl < dots.length; dl++) {
+                        if (dl === currentIndex) {
+                            dots[dl].classList.add('active');
+                        } else {
+                            dots[dl].classList.remove('active');
+                        }
+                    }
+                });
+            }
+        }
+
+        function showFallbackHero() {
+            var heroSection = document.getElementById('ads-hero-section');
+            heroSection.innerHTML = '<div class="hero-bg-overlay"></div>' +
+                '<div class="hero-content">' +
+                '<h1>Welcome to BBNL</h1>' +
+                '<p class="subtitle">Live TV & Streaming</p>' +
+                '<p class="description">Watch your favorite channels, movies, and shows. Enjoy seamless streaming on your Samsung TV.</p>' +
+                '<div class="hero-actions">' +
+                '<button class="btn btn-watch focusable" onclick="window.location.href=\'tv-channels.html\'">Watch Live TV</button>' +
+                '</div>' +
+                '</div>';
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            loadLiveChannels();
+            loadAds();
+
+            // Initialize remote control
+            setTimeout(function () {
+                RemoteControl.init({
+                    focusableSelector: '.sidebar-menu-item, .media-item, .channel-card-home, .ott-app-card, .app-card, .btn, button, a, .view-all-link, .focusable',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

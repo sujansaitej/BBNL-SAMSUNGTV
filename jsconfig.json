@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "commonjs",
+        "checkJs": false,
+        "allowJs": true
+    },
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*",
+        "bbnl-proxy/node_modules",
+        "bbnl-proxy/node_modules/**/*"
+    ]
+}

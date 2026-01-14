@@ -1,0 +1,616 @@
+/* Main App Container */
+.app-container {
+    display: block;
+    min-height: 100vh;
+    background: #000000;
+}
+
+.main-content {
+    overflow-y: auto;
+    max-height: 100vh;
+    padding: 0;
+}
+
+.content-area {
+    padding-top: 4.375rem;
+    /* Header height */
+    overflow-y: auto;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    background: #000000;
+}
+
+body.light-mode .content-area {
+    background: #000000;
+}
+
+/* Homepage Hero */
+.home-hero-section {
+    position: relative;
+    height: 50vh;
+    min-height: 18rem;
+    max-height: 35rem;
+    width: calc(100% - 5rem);
+    margin: 0 2.5rem 1.875rem;
+
+    background-size: cover;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 1.25rem;
+    overflow: hidden;
+}
+
+.hero-bg-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.2) 100%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.2) 100%);
+    z-index: 1;
+}
+
+.home-hero-section .hero-content {
+    position: relative;
+    z-index: 2;
+    padding-left: 3.125rem;
+    max-width: 35rem;
+}
+
+.home-hero-section h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.home-hero-section .subtitle {
+    font-size: 1rem;
+    color: #e0e0e0;
+    font-weight: 500;
+    margin-bottom: 0.9375rem;
+}
+
+.home-hero-section .description {
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    max-width: 25rem;
+}
+
+.home-hero-section .tags {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 1.5625rem;
+}
+
+.home-hero-section .tags > * {
+    margin-right: 0.625rem;
+}
+
+.home-hero-section .tags > *:last-child {
+    margin-right: 0;
+}
+
+.home-hero-section .tag {
+    background: transparent;
+    border: 1px solid #4a4a4a;
+    padding: 0.3125rem 0.875rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    color: #d1d5db;
+}
+
+.home-hero-section .hero-actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.home-hero-section .hero-actions > * {
+    margin-right: 0.75rem;
+}
+
+.home-hero-section .hero-actions > *:last-child {
+    margin-right: 0;
+}
+
+.home-hero-section .btn-watch {
+    background: #22c55e;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: 1.5625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-transition: background 0.2s ease;
+    transition: background 0.2s ease;
+}
+
+.home-hero-section .btn-watch > * {
+    margin-right: 0.5rem;
+}
+
+.home-hero-section .btn-watch > *:last-child {
+    margin-right: 0;
+}
+
+.home-hero-section .btn-watch:hover {
+    background: #16a34a;
+}
+
+.home-hero-section .btn-add {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: transparent;
+    border: 2px solid #4b5563;
+    color: #fff;
+    font-size: 1.125rem;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+.home-hero-section .btn-add:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+/* Content Sections */
+.content-carousel {
+    padding: 1.25rem 2.5rem 1.875rem;
+}
+
+.content-section {
+    padding: 1.25rem 2.5rem;
+}
+
+.section-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 1.25rem;
+}
+
+.content-carousel h2 {
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 0.3px;
+    color: #fff;
+}
+
+body.light-mode .content-carousel h2 {
+    color: #ffffff;
+}
+
+.media-scroll-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow-x: auto;
+    padding-bottom: 15px;
+    /* Scrollbar styling handled by ::-webkit-scrollbar in reset.css */
+}
+
+.media-scroll-container > * {
+    margin-right: 20px;
+}
+
+.media-scroll-container > *:last-child {
+    margin-right: 0;
+}
+
+.media-scroll-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.media-scroll-container::-webkit-scrollbar-thumb {
+    background-color: #333;
+    border-radius: 4px;
+}
+
+.media-item {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 140px;
+    cursor: pointer;
+    -webkit-transition: -webkit-transform 0.2s;
+    transition: -webkit-transform 0.2s;
+    transition: transform 0.2s;
+    transition: transform 0.2s, -webkit-transform 0.2s;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+
+.media-item:hover {
+    -webkit-transform: translateY(-5px);
+    transform: translateY(-5px);
+}
+
+.media-icon-box {
+    width: 140px;
+    height: 100px;
+    border-radius: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+    margin-bottom: 10px;
+    -webkit-transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease;
+}
+
+.media-item.active .media-icon-box,
+.media-item:focus .media-icon-box {
+    border-color: #3b82f6;
+}
+
+/* Icon Box Backgrounds */
+.gradient-purple {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+}
+
+.gradient-blue {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+}
+
+.black-bg {
+    background: #000;
+    border: 1px solid #333;
+}
+
+.white-bg {
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+.ott-logo {
+    max-width: 70%;
+    max-height: 50%;
+    /* object-fit not supported in Tizen - using max-width/max-height for scaling */
+}
+
+.white-filter {
+    -webkit-filter: invert(1) brightness(100);
+    filter: invert(1) brightness(100);
+}
+
+.channel-logo-img {
+    max-width: 70%;
+    max-height: 70%;
+}
+
+.view-all-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.view-all-box > * {
+    margin-right: 0.5rem;
+}
+
+.view-all-box > *:last-child {
+    margin-right: 0;
+}
+
+.view-all-box i {
+    font-size: 0.875rem;
+}
+
+.media-info {
+    padding-left: 0.25rem;
+}
+
+.media-info h3 {
+    font-size: 0.8125rem;
+    color: white;
+    margin: 0 0 0.25rem 0;
+    font-weight: 600;
+}
+
+.media-info p {
+    font-size: 0.6875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+body.light-mode .media-info h3 {
+    color: #ffffff;
+}
+
+body.light-mode .media-info p {
+    color: #6b7280;
+}
+
+/* Applications Grid on Home - Using Flexbox */
+.apps-grid-container {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin: -0.625rem;
+}
+
+.apps-grid-container > * {
+    width: calc(20% - 1.25rem);
+    min-width: 11.25rem;
+    margin: 0.625rem;
+}
+
+/* Movie Poster Style Override */
+.media-icon-box.movie-box {
+    padding-bottom: 150%; /* 2:3 aspect ratio */
+    height: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Network Popup */
+.network-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.network-popup-card {
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 0;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.network-popup-image-container {
+    width: 100%;
+    height: 300px;
+    background: #e0f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.network-popup-image-container img {
+    width: 100%;
+    height: 100%;
+}
+
+.network-popup-content {
+    padding: 30px;
+}
+
+.network-popup-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.network-popup-text {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.network-popup-actions {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.network-popup-actions > * {
+    margin-right: 15px;
+}
+
+.network-popup-actions > *:last-child {
+    margin-right: 0;
+}
+
+/* Network Modal (Right Side) */
+.network-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    /* backdrop-filter not supported in Tizen - using darker solid background */
+    display: none;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    z-index: 2000;
+    padding: 80px 30px 20px 20px;
+}
+
+.network-modal-content {
+    background: #12151a;
+    border: 1px solid #30363d;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+.network-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #30363d;
+}
+
+.network-modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.network-option {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #30363d;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.network-option > * {
+    margin-right: 16px;
+}
+
+.network-option > *:last-child {
+    margin-right: 0;
+}
+
+.network-option:last-child {
+    border-bottom: none;
+}
+
+.network-option:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.network-option-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.network-option-content {
+    flex: 1;
+}
+
+.network-option-content h4 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+}
+
+.network-option-content p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+}
+
+.network-option-btn {
+    background: transparent;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.network-option-btn:hover {
+    color: #ffffff;
+}
+
+/* Light Mode Support for Network Popup */
+body.light-mode .network-popup-overlay {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+body.light-mode .network-popup-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode .network-popup-title {
+    color: #0b1113;
+}
+
+body.light-mode #network-popup-msg {
+    color: #6c757d;
+}
+
+body.light-mode .network-modal {
+    background: rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - TV Channels</title>
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/homepages.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <!-- API Files -->
+    <script src="api/config.js"></script>
+    <script src="api/auth.js"></script>
+    <script src="api/channels.js"></script>
+    <script src="js/script.js"></script>
+    <style>
+        /* Page Layout - Clean Design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px 40px;
+        }
+        
+        /* Back Button */
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 10px 0;
+            margin-bottom: 20px;
+        }
+        
+        .back-button:hover {
+            color: #ccc;
+        }
+        
+        .back-button:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
+        
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #1a1a1a;
+            border-radius: 25px;
+            padding: 12px 20px;
+            width: 280px;
+            border: 1px solid #333;
+        }
+        
+        .search-box i {
+            color: #666;
+            margin-right: 12px;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        .search-box input::placeholder {
+            color: #666;
+        }
+        
+        .search-box:focus-within {
+            border-color: #3b82f6;
+        }
+        
+        /* Filter Pills */
+        .filter-pills-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .pill-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        
+        .pill-btn:hover {
+            background: #2a2a2a;
+        }
+        
+        .pill-btn.active {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+        }
+        
+        .pill-btn:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+        
+        .pill-btn .dropdown-icon {
+            margin-left: 6px;
+            font-size: 10px;
+        }
+        
+        /* Section Styles */
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            margin-top: 32px;
+            color: #fff;
+        }
+        
+        /* Channels Grid */
+        .channels-grid {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        /* Channel Card - Clean White Design */
+        .channel-card {
+            width: 120px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .channel-card:focus {
+            outline: none;
+        }
+        
+        .channel-card:focus .channel-card-inner {
+            outline: 3px solid #3b82f6;
+            transform: scale(1.05);
+        }
+        
+        .channel-card-inner {
+            background: #fff;
+            border-radius: 12px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 8px;
+            overflow: hidden;
+        }
+        
+        .channel-logo-img {
+            max-width: 80%;
+            max-height: 70%;
+            object-fit: contain;
+        }
+        
+        .no-image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+        
+        .no-image-placeholder i {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .no-image-placeholder span {
+            font-size: 10px;
+        }
+        
+        .live-badge {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            background: #ff0000;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .live-badge::before {
+            content: "";
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+        }
+        
+        .channel-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .channel-type {
+            font-size: 11px;
+            color: #666;
+        }
+        
+        /* Loading & States */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #333;
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: #ff4444;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin: 20px;
+            text-align: center;
+        }
+        
+        /* Error Screen Styles */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #3a3a3a;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .error-screen.show {
+            display: flex;
+        }
+        
+        .error-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px 70px;
+            text-align: center;
+            max-width: 520px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .error-image {
+            width: 300px;
+            height: 190px;
+            margin: 0 auto 30px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .error-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .error-image svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .error-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        
+        .error-subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 35px;
+        }
+        
+        .error-btn {
+            background: #f5c518;
+            color: #222;
+            border: none;
+            padding: 16px 60px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 197, 24, 0.4);
+        }
+        
+        .error-btn:hover, .error-btn:focus {
+            background: #e6b800;
+            outline: 3px solid #fff;
+            transform: scale(1.02);
+        }
+        
+        .login-required {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .login-required a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .no-channels {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Back Button -->
+        <button class="back-button" onclick="history.back()">
+            <i class="fas fa-chevron-left"></i>
+            <span>Back</span>
+        </button>
+        
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">TV Channels</h1>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search Channels" id="search-input">
+            </div>
+        </div>
+
+        <!-- Filter Pills -->
+        <div class="filter-pills-container" id="category-filters">
+            <button class="pill-btn active" data-grid="0">All</button>
+            <button class="pill-btn" data-filter="subscribed">Subscribed</button>
+            <button class="pill-btn" data-grid="entertainment">Entertainment</button>
+            <button class="pill-btn" data-grid="sports">Sports</button>
+            <button class="pill-btn" data-grid="news">News</button>
+            <button class="pill-btn" data-grid="kids">Kids</button>
+            <button class="pill-btn" data-grid="language">Language <i class="fas fa-chevron-down dropdown-icon"></i></button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="channels-loading" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading channels...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="channels-error" class="error-message" style="display: none;"></div>
+
+        <!-- Login Required Message -->
+        <div id="login-required" class="login-required" style="display: none;">
+            <i class="fas fa-lock" style="font-size: 48px; color: #666; margin-bottom: 16px;"></i>
+            <h3>Login Required</h3>
+            <p>Please login to view channels</p>
+            <a href="index.html">Go to Login</a>
+        </div>
+        
+        <!-- Error Screens (Full Screen Overlays) -->
+        
+        <!-- No Internet Connection Error -->
+        <div id="error-no-internet" class="error-screen">
+            <div class="error-card">
+                <div class="error-image">
+                    <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="#1a5c5c" width="280" height="180" rx="8"/>
+                        <text x="140" y="30" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">NO INTERNET CONNECTION</text>
+                        <!-- Dog -->
+                        <ellipse cx="70" cy="140" rx="35" ry="25" fill="#e6b85c"/>
+                        <circle cx="70" cy="110" r="25" fill="#e6b85c"/>
+                        <ellipse cx="55" cy="95" rx="10" ry="15" fill="#e6b85c"/>
+                        <ellipse cx="85" cy="95" rx="10" ry="15" fill="#e6b85c"/>
+                        <circle cx="62" cy="108" r="4" fill="#333"/>
+                        <circle cx="78" cy="108" r="4" fill="#333"/>
+                        <ellipse cx="70" cy="118" rx="6" ry="4" fill="#333"/>
+                        <!-- Router with warning -->
+                        <rect x="120" y="100" width="40" height="30" fill="#7cb342" rx="4"/>
+                        <polygon points="140,60 150,85 130,85" fill="#fff" stroke="#333" stroke-width="2"/>
+                        <text x="140" y="80" text-anchor="middle" fill="#333" font-size="16" font-weight="bold">!</text>
+                        <!-- Cat -->
+                        <ellipse cx="210" cy="140" rx="30" ry="22" fill="#d4845c"/>
+                        <circle cx="210" cy="115" r="22" fill="#d4845c"/>
+                        <polygon points="192,100 198,85 205,100" fill="#d4845c"/>
+                        <polygon points="215,100 222,85 228,100" fill="#d4845c"/>
+                        <circle cx="202" cy="112" r="3" fill="#333"/>
+                        <circle cx="218" cy="112" r="3" fill="#333"/>
+                        <path d="M205,120 Q210,125 215,120" stroke="#333" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <h2 class="error-title">No Internet Connection</h2>
+                <p class="error-subtitle">Please Check your network and try again</p>
+                <button class="error-btn" tabindex="0" onclick="retryConnection()">Try Again</button>
+            </div>
+        </div>
+        
+        <!-- Failed to Load Channels Error -->
+        <div id="error-load-failed" class="error-screen">
+            <div class="error-card">
+                <div class="error-image">
+                    <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="#1a5c5c" width="280" height="180" rx="8"/>
+                        <text x="140" y="25" text-anchor="middle" fill="#f5c518" font-size="13" font-weight="bold">FAILED TO LOAD CHANNELS</text>
+                        
+                        <!-- TV Monitor -->
+                        <rect x="85" y="40" width="110" height="85" fill="#333" rx="6"/>
+                        <rect x="92" y="47" width="96" height="62" fill="#e8e8e8" rx="3"/>
+                        
+                        <!-- TV Screen Content - No channels available -->
+                        <rect x="100" y="60" width="80" height="35" fill="#d0d0d0" rx="3" stroke="#999" stroke-width="1"/>
+                        <text x="140" y="77" text-anchor="middle" fill="#666" font-size="9" font-weight="500">No channels</text>
+                        <text x="140" y="88" text-anchor="middle" fill="#666" font-size="9" font-weight="500">available</text>
+                        
+                        <!-- TV Stand -->
+                        <rect x="125" y="125" width="30" height="8" fill="#333"/>
+                        <rect x="115" y="132" width="50" height="5" fill="#333" rx="2"/>
+                        
+                        <!-- Warning Triangle on TV -->
+                        <polygon points="175,35 188,58 162,58" fill="#fff" stroke="#333" stroke-width="2"/>
+                        <text x="175" y="54" text-anchor="middle" fill="#333" font-size="14" font-weight="bold">!</text>
+                        
+                        <!-- Sad Brown Dog (left side) -->
+                        <ellipse cx="45" cy="148" rx="28" ry="18" fill="#8b6b4a"/>
+                        <circle cx="45" cy="125" r="20" fill="#8b6b4a"/>
+                        <ellipse cx="32" cy="112" rx="8" ry="12" fill="#8b6b4a"/>
+                        <ellipse cx="58" cy="112" rx="8" ry="12" fill="#8b6b4a"/>
+                        <circle cx="38" cy="123" r="4" fill="#333"/>
+                        <circle cx="52" cy="123" r="4" fill="#333"/>
+                        <ellipse cx="45" cy="132" rx="6" ry="4" fill="#333"/>
+                        <path d="M38,138 Q45,143 52,138" stroke="#333" stroke-width="2" fill="none"/>
+                        
+                        <!-- Orange/Ginger Cat (right side) - pulling cable -->
+                        <ellipse cx="235" cy="148" rx="28" ry="18" fill="#e8945c"/>
+                        <circle cx="235" cy="125" r="20" fill="#e8945c"/>
+                        <polygon points="218,112 224,95 232,112" fill="#e8945c"/>
+                        <polygon points="238,112 246,95 252,112" fill="#e8945c"/>
+                        <circle cx="228" cy="123" r="4" fill="#333"/>
+                        <circle cx="242" cy="123" r="4" fill="#333"/>
+                        <ellipse cx="235" cy="130" rx="4" ry="3" fill="#ffb6c1"/>
+                        <path d="M228,135 Q235,140 242,135" stroke="#333" stroke-width="2" fill="none"/>
+                        
+                        <!-- Cable from TV to Cat -->
+                        <path d="M195,110 Q210,120 220,125" stroke="#333" stroke-width="3" fill="none"/>
+                        <circle cx="220" cy="127" r="4" fill="#333"/>
+                        
+                        <!-- Cat's paw on cable -->
+                        <ellipse cx="215" cy="138" rx="8" ry="6" fill="#e8945c"/>
+                    </svg>
+                </div>
+                <h2 class="error-title">Failed to Load Channels</h2>
+                <p class="error-subtitle">Please Check your network and try again</p>
+                <button class="error-btn" tabindex="0" onclick="retryLoadChannels()">Try Again</button>
+            </div>
+        </div>
+        
+        <!-- No Login Error -->
+        <div id="error-no-login" class="error-screen">
+            <div class="error-card">
+                <div class="error-image">
+                    <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="#1a5c5c" width="280" height="180" rx="8"/>
+                        <text x="140" y="30" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold">NO LOGIN</text>
+                        <!-- Monitor -->
+                        <rect x="90" y="50" width="100" height="80" fill="#333" rx="4"/>
+                        <rect x="95" y="55" width="90" height="55" fill="#f5f5dc" rx="2"/>
+                        <rect x="125" y="130" width="30" height="10" fill="#333"/>
+                        <rect x="110" y="138" width="60" height="5" fill="#333" rx="2"/>
+                        <!-- Warning icon -->
+                        <polygon points="120,65 130,85 110,85" fill="#fff" stroke="#f5c518" stroke-width="2"/>
+                        <text x="120" y="82" text-anchor="middle" fill="#f5c518" font-size="12" font-weight="bold">!</text>
+                        <!-- X icon -->
+                        <circle cx="165" cy="75" r="12" fill="#ff6b6b"/>
+                        <text x="165" y="80" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">×</text>
+                        <!-- Password field -->
+                        <rect x="105" y="92" width="70" height="12" fill="#fff" rx="2"/>
+                        <text x="140" y="101" text-anchor="middle" fill="#333" font-size="10">****</text>
+                        <!-- Dog -->
+                        <ellipse cx="50" cy="145" rx="25" ry="18" fill="#8b6b4a"/>
+                        <circle cx="50" cy="125" r="18" fill="#8b6b4a"/>
+                        <ellipse cx="40" cy="115" rx="7" ry="10" fill="#8b6b4a"/>
+                        <ellipse cx="60" cy="115" rx="7" ry="10" fill="#8b6b4a"/>
+                        <circle cx="44" cy="122" r="3" fill="#333"/>
+                        <circle cx="56" cy="122" r="3" fill="#333"/>
+                        <ellipse cx="50" cy="128" rx="5" ry="3" fill="#333"/>
+                        <path d="M45,135 Q50,140 55,135" stroke="#ff9999" stroke-width="3" fill="none"/>
+                        <!-- Cat -->
+                        <ellipse cx="230" cy="145" rx="25" ry="18" fill="#d4845c"/>
+                        <circle cx="230" cy="125" r="18" fill="#d4845c"/>
+                        <polygon points="218,115 222,100 228,115" fill="#d4845c"/>
+                        <polygon points="232,115 238,100 244,115" fill="#d4845c"/>
+                        <circle cx="224" cy="122" r="3" fill="#333"/>
+                        <circle cx="236" cy="122" r="3" fill="#333"/>
+                    </svg>
+                </div>
+                <h2 class="error-title">No Login</h2>
+                <p class="error-subtitle">Please Check your network and try again</p>
+                <button class="error-btn" tabindex="0" onclick="goToLogin()">Try Again</button>
+            </div>
+        </div>
+        
+        <!-- Login Required Error -->
+        <div id="error-login-required" class="error-screen">
+            <div class="error-card">
+                <div class="error-image">
+                    <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect fill="#1a5c5c" width="280" height="180" rx="8"/>
+                        <text x="140" y="25" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">LOGIN REQUIRED</text>
+                        <!-- Monitor -->
+                        <rect x="90" y="40" width="100" height="85" fill="#333" rx="4"/>
+                        <rect x="95" y="45" width="90" height="60" fill="#f5f5dc" rx="2"/>
+                        <rect x="125" y="125" width="30" height="8" fill="#333"/>
+                        <rect x="110" y="132" width="60" height="5" fill="#333" rx="2"/>
+                        <!-- Email icon -->
+                        <rect x="105" y="52" width="25" height="18" fill="#64b5f6" rx="2"/>
+                        <path d="M105,52 L117,65 L130,52" stroke="#fff" stroke-width="2" fill="none"/>
+                        <!-- Warning -->
+                        <polygon points="150,50 158,65 142,65" fill="#fff" stroke="#f5c518" stroke-width="2"/>
+                        <text x="150" y="62" text-anchor="middle" fill="#f5c518" font-size="10" font-weight="bold">!</text>
+                        <!-- X icon -->
+                        <circle cx="175" cy="57" r="10" fill="#ff6b6b"/>
+                        <text x="175" y="62" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">×</text>
+                        <!-- Password -->
+                        <rect x="105" y="75" width="70" height="12" fill="#fff" rx="2"/>
+                        <text x="140" y="84" text-anchor="middle" fill="#333" font-size="10">****</text>
+                        <!-- Login button -->
+                        <rect x="120" y="92" width="40" height="10" fill="#64b5f6" rx="2"/>
+                        <text x="140" y="100" text-anchor="middle" fill="#fff" font-size="8">Log in</text>
+                        <!-- Dog -->
+                        <ellipse cx="50" cy="145" rx="25" ry="18" fill="#e6b85c"/>
+                        <circle cx="50" cy="125" r="18" fill="#e6b85c"/>
+                        <ellipse cx="40" cy="115" rx="7" ry="10" fill="#e6b85c"/>
+                        <ellipse cx="60" cy="115" rx="7" ry="10" fill="#e6b85c"/>
+                        <circle cx="44" cy="122" r="3" fill="#333"/>
+                        <circle cx="56" cy="122" r="3" fill="#333"/>
+                        <ellipse cx="50" cy="130" rx="5" ry="3" fill="#333"/>
+                        <path d="M45,138 Q50,143 55,138" stroke="#ff9999" stroke-width="3" fill="none"/>
+                        <!-- Cat -->
+                        <ellipse cx="230" cy="145" rx="25" ry="18" fill="#d4845c"/>
+                        <circle cx="230" cy="125" r="18" fill="#d4845c"/>
+                        <polygon points="218,115 222,100 228,115" fill="#d4845c"/>
+                        <polygon points="232,115 238,100 244,115" fill="#d4845c"/>
+                        <circle cx="224" cy="122" r="3" fill="#333"/>
+                        <circle cx="236" cy="122" r="3" fill="#333"/>
+                    </svg>
+                </div>
+                <h2 class="error-title">Login Required</h2>
+                <p class="error-subtitle">Please Check your network and try again</p>
+                <button class="error-btn" tabindex="0" onclick="goToLogin()">Try Again</button>
+            </div>
+        </div>
+
+        <!-- Channels Container -->
+        <div id="channels-container" style="display: none;">
+            <!-- TV Channels Section (First Row) -->
+            <section>
+                <div class="channels-grid" id="channels-row-1">
+                    <!-- Channels loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- Mostly Viewed Channels Section -->
+            <section>
+                <h2 class="section-title">Mostly Viewed Channels</h2>
+                <div class="channels-grid" id="channels-row-2">
+                    <!-- Channels loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- Others Channels Section -->
+            <section>
+                <h2 class="section-title">Others Channels</h2>
+                <div class="channels-grid" id="channels-row-3">
+                    <!-- Channels loaded dynamically -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // TV Channels Page - API Integration (ES5 Compatible)
+        // ========================================
+        
+        var allChannels = [];
+        var allCategories = [];
+        var currentFilter = '0';
+        var loadingTimeoutId = null;
+        var LOADING_TIMEOUT_MS = 15000; // 15 seconds timeout for loading
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('TV Channels page loaded');
+            
+            // Add network status listeners (ES5 compatible)
+            window.addEventListener('offline', function() {
+                console.log('Network disconnected');
+                clearLoadingTimeout();
+                showError('No Internet Connection', 'no-internet');
+            });
+            
+            window.addEventListener('online', function() {
+                console.log('Network connected');
+                hideAllErrors();
+                document.getElementById('channels-loading').style.display = 'flex';
+                startLoadingTimeout();
+                loadCategories().then(function() {
+                    return loadChannels();
+                });
+            });
+            
+            // Check if offline immediately
+            if (!navigator.onLine) {
+                showError('No Internet Connection', 'no-internet');
+                return;
+            }
+            
+            // Check authentication
+            if (!AuthAPI.isAuthenticated()) {
+                showLoginRequired();
+                return;
+            }
+            
+            // Start loading timeout
+            startLoadingTimeout();
+            
+            // Load categories and channels
+            loadCategories().then(function() {
+                return loadChannels();
+            });
+            
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.back-button, .search-box input, .pill-btn, .channel-card, .error-btn',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+            
+            // Search functionality
+            var searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    searchChannels(this.value);
+                });
+            }
+            
+            // Add keyboard/remote navigation for error screens (Tizen compatible)
+            document.addEventListener('keydown', function(e) {
+                var keyCode = e.keyCode;
+                
+                // Check if any error screen is visible
+                var visibleError = document.querySelector('.error-screen.show');
+                if (visibleError) {
+                    var btn = visibleError.querySelector('.error-btn');
+                    
+                    // Enter key - click the button
+                    if (keyCode === 13 && btn) {
+                        btn.click();
+                        e.preventDefault();
+                    }
+                    
+                    // Back key (Tizen: 10009)
+                    if (keyCode === 10009 || keyCode === 8 || keyCode === 27) {
+                        // Go back or go to homepage
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            window.location.href = 'homepage.html';
+                        }
+                        e.preventDefault();
+                    }
+                    
+                    // Focus the button when error screen shows
+                    if (btn && document.activeElement !== btn) {
+                        btn.focus();
+                    }
+                }
+            });
+        });
+        
+        // Show login required message
+        function showLoginRequired() {
+            console.log('Showing login required screen');
+            clearLoadingTimeout();
+            document.getElementById('channels-loading').style.display = 'none';
+            document.getElementById('channels-container').style.display = 'none';
+            var errorScreen = document.getElementById('error-login-required');
+            errorScreen.classList.add('show');
+            // Auto-focus button
+            setTimeout(function() {
+                var btn = errorScreen.querySelector('.error-btn');
+                if (btn) btn.focus();
+            }, 100);
+        }
+        
+        // Start loading timeout - shows error if loading takes too long
+        function startLoadingTimeout() {
+            clearLoadingTimeout();
+            console.log('Starting loading timeout (' + LOADING_TIMEOUT_MS + 'ms)');
+            loadingTimeoutId = setTimeout(function() {
+                console.log('Loading timeout reached - showing Failed to Load Channels');
+                // Only show error if we're still in loading state
+                var loadingDiv = document.getElementById('channels-loading');
+                if (loadingDiv && loadingDiv.style.display !== 'none') {
+                    showError('Failed to load channels - Connection timeout', 'load-failed');
+                }
+            }, LOADING_TIMEOUT_MS);
+        }
+        
+        // Clear loading timeout
+        function clearLoadingTimeout() {
+            if (loadingTimeoutId) {
+                clearTimeout(loadingTimeoutId);
+                loadingTimeoutId = null;
+                console.log('Loading timeout cleared');
+            }
+        }
+        
+        // Show error message with specific error screen
+        function showError(message, errorType) {
+            console.log('showError called - Message:', message, 'Type:', errorType);
+            
+            // Clear loading timeout since we're showing an error
+            clearLoadingTimeout();
+            
+            document.getElementById('channels-loading').style.display = 'none';
+            document.getElementById('channels-container').style.display = 'none';
+            
+            // Determine which error screen to show
+            var errorScreen = null;
+            
+            if (errorType === 'no-internet' || message.toLowerCase().indexOf('network') !== -1 || 
+                message.toLowerCase().indexOf('internet') !== -1 || message.toLowerCase().indexOf('connection') !== -1) {
+                errorScreen = document.getElementById('error-no-internet');
+                console.log('Showing: No Internet Connection');
+            } else if (errorType === 'no-login' || 
+                       (message.toLowerCase().indexOf('login') !== -1 && message.toLowerCase().indexOf('required') === -1) || 
+                       message.toLowerCase().indexOf('not logged') !== -1) {
+                errorScreen = document.getElementById('error-no-login');
+                console.log('Showing: No Login');
+            } else if (errorType === 'login-required' || message.toLowerCase().indexOf('login required') !== -1) {
+                errorScreen = document.getElementById('error-login-required');
+                console.log('Showing: Login Required');
+            } else {
+                // Default to failed to load channels
+                errorScreen = document.getElementById('error-load-failed');
+                console.log('Showing: Failed to Load Channels');
+            }
+            
+            if (errorScreen) {
+                errorScreen.classList.add('show');
+                // Auto-focus the button for remote control (Tizen)
+                setTimeout(function() {
+                    var btn = errorScreen.querySelector('.error-btn');
+                    if (btn) {
+                        btn.focus();
+                    }
+                }, 100);
+            } else {
+                // Fallback to simple error message
+                var errorDiv = document.getElementById('channels-error');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+        }
+        
+        // Hide all error screens
+        function hideAllErrors() {
+            console.log('Hiding all error screens');
+            clearLoadingTimeout();
+            var errorScreens = document.querySelectorAll('.error-screen');
+            for (var i = 0; i < errorScreens.length; i++) {
+                errorScreens[i].classList.remove('show');
+            }
+            document.getElementById('channels-error').style.display = 'none';
+            document.getElementById('channels-container').style.display = 'none';
+        }
+        
+        // Test function to show specific error screens (for debugging)
+        // Usage from console: testError('no-internet') or testError('load-failed') or testError('login-required') or testError('no-login')
+        function testError(type) {
+            hideAllErrors();
+            if (type === 'no-internet') {
+                showError('No Internet Connection', 'no-internet');
+            } else if (type === 'load-failed') {
+                showError('Failed to load channels', 'load-failed');
+            } else if (type === 'login-required') {
+                showError('Login Required', 'login-required');
+            } else if (type === 'no-login') {
+                showError('Please login first', 'no-login');
+            } else {
+                console.log('Usage: testError("no-internet" | "load-failed" | "login-required" | "no-login")');
+            }
+        }
+        
+        // Retry connection (for no internet error)
+        function retryConnection() {
+            hideAllErrors();
+            document.getElementById('channels-loading').style.display = 'flex';
+            
+            // Check if online
+            if (!navigator.onLine) {
+                setTimeout(function() {
+                    showError('No Internet Connection', 'no-internet');
+                }, 1000);
+                return;
+            }
+            
+            // Start loading timeout
+            startLoadingTimeout();
+            
+            // Try to load channels
+            loadCategories();
+            loadChannels();
+        }
+        
+        // Retry loading channels
+        function retryLoadChannels() {
+            hideAllErrors();
+            document.getElementById('channels-loading').style.display = 'flex';
+            
+            // Start loading timeout
+            startLoadingTimeout();
+            
+            loadCategories();
+            loadChannels();
+        }
+        
+        // Go to login page
+        function goToLogin() {
+            window.location.href = 'index.html';
+        }
+        
+        // Load channel categories from API
+        function loadCategories() {
+            console.log('Loading categories...');
+            
+            // Check internet connection first
+            if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+                showError('No Internet Connection', 'no-internet');
+                return Promise.resolve();
+            }
+            
+            return ChannelsAPI.getCategories().then(function(result) {
+                if (result.success && result.categories.length > 0) {
+                    allCategories = result.categories;
+                    renderCategoryFilters(result.categories);
+                    console.log('Categories loaded:', result.categories.length);
+                } else if (!result.success) {
+                    // Show error from API response
+                    var errorType = result.errorType || 'load-failed';
+                    var msg = result.message || 'Failed to load categories';
+                    console.warn('Categories failed:', msg, 'Type:', errorType);
+                    
+                    // Only show error if it's a critical one (login/network)
+                    if (errorType === 'login-required' || errorType === 'no-internet') {
+                        showError(msg, errorType);
+                    }
+                } else {
+                    console.warn('No categories loaded:', result.message);
+                }
+            }, function(error) {
+                console.error('Failed to load categories:', error);
+                
+                // Check if it's a network error
+                var errorMsg = error.message || '';
+                if (error.isNetworkError || 
+                    errorMsg.toLowerCase().indexOf('no internet') !== -1 ||
+                    errorMsg.toLowerCase().indexOf('network') !== -1 || 
+                    errorMsg.toLowerCase().indexOf('connection') !== -1) {
+                    showError('No Internet Connection', 'no-internet');
+                }
+            });
+        }
+        
+        // Render category filter pills
+        function renderCategoryFilters(categories) {
+            var container = document.getElementById('category-filters');
+            
+            var html = '<button class="pill-btn active" data-grid="0">All</button>' +
+                '<button class="pill-btn" data-filter="subscribed">Subscribed</button>';
+            
+            for (var i = 0; i < categories.length; i++) {
+                var cat = categories[i];
+                if (cat.grid !== '0') {
+                    html += '<button class="pill-btn" data-grid="' + cat.grid + '">' + cat.grtitle + '</button>';
+                }
+            }
+            
+            html += '<button class="pill-btn" data-grid="language">Language <i class="fas fa-chevron-down dropdown-icon"></i></button>';
+            
+            container.innerHTML = html;
+            
+            var buttons = container.querySelectorAll('.pill-btn');
+            for (var j = 0; j < buttons.length; j++) {
+                buttons[j].addEventListener('click', function(e) {
+                    var allBtns = container.querySelectorAll('.pill-btn');
+                    for (var k = 0; k < allBtns.length; k++) {
+                        allBtns[k].classList.remove('active');
+                    }
+                    e.target.classList.add('active');
+                    
+                    if (e.target.getAttribute('data-filter') === 'subscribed') {
+                        filterSubscribed();
+                    } else {
+                        currentFilter = e.target.getAttribute('data-grid');
+                        filterByGrid(currentFilter);
+                    }
+                });
+            }
+        }
+        
+        // Load channels from API
+        function loadChannels() {
+            console.log('Loading channels...');
+            
+            // Check internet connection first (ES5 compatible)
+            if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+                showError('No Internet Connection', 'no-internet');
+                return Promise.resolve();
+            }
+            
+            return ChannelsAPI.getChannelData().then(function(result) {
+                // Clear loading timeout on successful response
+                clearLoadingTimeout();
+                document.getElementById('channels-loading').style.display = 'none';
+                
+                if (result.success) {
+                    allChannels = result.channels;
+                    
+                    // Check if channels array is empty
+                    if (!allChannels || allChannels.length === 0) {
+                        showError('No channels available', 'load-failed');
+                        return;
+                    }
+                    
+                    // Store channels in localStorage for player channel switching
+                    try {
+                        var channelsForStorage = [];
+                        for (var i = 0; i < allChannels.length; i++) {
+                            var ch = allChannels[i];
+                            channelsForStorage.push({
+                                num: padNumber(i + 1, 3),
+                                name: ch.chtitle || 'Channel ' + (i + 1),
+                                stream: ch.streamlink || '',
+                                logo: ch.chlogo || '',
+                                chid: ch.chid
+                            });
+                        }
+                        localStorage.setItem('bbnl_channels', JSON.stringify(channelsForStorage));
+                        console.log('Channels stored in localStorage:', channelsForStorage.length);
+                    } catch (e) {
+                        console.error('Could not store channels:', e);
+                    }
+                    
+                    document.getElementById('channels-container').style.display = 'block';
+                    renderAllSections(allChannels);
+                    console.log('Channels loaded:', result.channels.length);
+                } else {
+                    // Use errorType from API response if available
+                    var msg = result.message || 'Failed to load channels';
+                    var errorType = result.errorType || 'load-failed';
+                    
+                    // Double check error type from message
+                    if (!result.errorType) {
+                        if (msg.toLowerCase().indexOf('login') !== -1 || 
+                            msg.toLowerCase().indexOf('not logged') !== -1) {
+                            errorType = 'login-required';
+                        } else if (msg.toLowerCase().indexOf('network') !== -1 ||
+                                   msg.toLowerCase().indexOf('internet') !== -1 ||
+                                   msg.toLowerCase().indexOf('connection') !== -1) {
+                            errorType = 'no-internet';
+                        }
+                    }
+                    
+                    showError(msg, errorType);
+                }
+            }, function(error) {
+                console.error('Failed to load channels:', error);
+                
+                // Detect error type
+                var errorMsg = error.message || 'Failed to load channels';
+                var errorType = 'load-failed';
+                
+                // Check if it's a network error
+                if (error.isNetworkError || 
+                    errorMsg.toLowerCase().indexOf('no internet') !== -1 ||
+                    errorMsg.toLowerCase().indexOf('network error') !== -1 || 
+                    errorMsg.toLowerCase().indexOf('failed to fetch') !== -1 ||
+                    errorMsg.toLowerCase().indexOf('timeout') !== -1 ||
+                    errorMsg.toLowerCase().indexOf('connection') !== -1) {
+                    errorType = 'no-internet';
+                    errorMsg = 'No Internet Connection';
+                } else if (errorMsg.toLowerCase().indexOf('login') !== -1) {
+                    errorType = 'login-required';
+                }
+                
+                showError(errorMsg, errorType);
+            });
+        }
+        
+        // Pad number with leading zeros
+        function padNumber(num, size) {
+            var s = String(num);
+            while (s.length < size) s = '0' + s;
+            return s;
+        }
+        
+        // Render all channel sections
+        function renderAllSections(channels) {
+            if (!channels || channels.length === 0) {
+                document.getElementById('channels-row-1').innerHTML = '<div class="no-channels"><p>No channels available</p></div>';
+                return;
+            }
+            
+            var section1 = channels.slice(0, 5);
+            var section2 = channels.slice(5, 10);
+            var section3 = channels.slice(10);
+            
+            renderChannelsRow('channels-row-1', section1);
+            renderChannelsRow('channels-row-2', section2.length > 0 ? section2 : shuffleArray(channels.slice()).slice(0, 5));
+            renderChannelsRow('channels-row-3', section3.length > 0 ? section3 : shuffleArray(channels.slice()).slice(0, 5));
+        }
+        
+        // Render channels in a row
+        function renderChannelsRow(containerId, channels) {
+            var container = document.getElementById(containerId);
+            
+            if (!channels || channels.length === 0) {
+                container.innerHTML = '<div class="no-channels"><p>No channels</p></div>';
+                return;
+            }
+            
+            var html = '';
+            for (var idx = 0; idx < channels.length; idx++) {
+                var channel = channels[idx];
+                var globalIndex = -1;
+                for (var gi = 0; gi < allChannels.length; gi++) {
+                    if (allChannels[gi].chid === channel.chid) {
+                        globalIndex = gi;
+                        break;
+                    }
+                }
+                var hasStream = !!channel.streamlink;
+                var channelTitle = channel.chtitle || 'Channel';
+                
+                html += '<div class="channel-card" tabindex="0" ' +
+                         'data-index="' + globalIndex + '" ' +
+                         'data-chid="' + channel.chid + '" ' +
+                         'onclick="playChannel(' + globalIndex + ')" ' +
+                         'onkeypress="if(event.key===\'Enter\')playChannel(' + globalIndex + ')">' +
+                        '<div class="channel-card-inner">' +
+                            (hasStream ? '<span class="live-badge">Live</span>' : '');
+                
+                if (channel.chlogo) {
+                    html += '<img src="' + channel.chlogo + '" alt="' + channelTitle + '" class="channel-logo-img" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\';">' +
+                            '<div class="no-image-placeholder" style="display:none;"><i class="fas fa-tv"></i><span>No Image</span></div>';
+                } else {
+                    html += '<div class="no-image-placeholder"><i class="fas fa-tv"></i><span>No Image</span></div>';
+                }
+                
+                html += '</div>' +
+                        '<p class="channel-name">' + channelTitle + '</p>' +
+                        '<p class="channel-type">live Channels</p>' +
+                    '</div>';
+            }
+            
+            container.innerHTML = html;
+            reinitRemote();
+        }
+        
+        // Shuffle array helper
+        function shuffleArray(array) {
+            var temp, j;
+            for (var i = array.length - 1; i > 0; i--) {
+                j = Math.floor(Math.random() * (i + 1));
+                temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+            return array;
+        }
+        
+        // Filter by grid (category)
+        function filterByGrid(grid) {
+            var filtered = grid === '0' ? allChannels : ChannelsAPI.getChannelsByGrid(allChannels, grid);
+            renderAllSections(filtered);
+        }
+        
+        // Filter subscribed channels
+        function filterSubscribed() {
+            var subscribed = [];
+            for (var i = 0; i < allChannels.length; i++) {
+                if (allChannels[i].subscribed === '1' || allChannels[i].subscribed === 1) {
+                    subscribed.push(allChannels[i]);
+                }
+            }
+            renderAllSections(subscribed.length > 0 ? subscribed : allChannels);
+        }
+        
+        // Search channels
+        function searchChannels(query) {
+            if (!query || query.trim() === '') {
+                renderAllSections(allChannels);
+                return;
+            }
+            
+            var q = query.toLowerCase();
+            var results = [];
+            for (var i = 0; i < allChannels.length; i++) {
+                var ch = allChannels[i];
+                if ((ch.chtitle && ch.chtitle.toLowerCase().indexOf(q) !== -1) ||
+                    (ch.chid && ch.chid.toString().indexOf(q) !== -1)) {
+                    results.push(ch);
+                }
+            }
+            renderAllSections(results);
+        }
+        
+        // CORRECTED playChannel function
+        function playChannel(index) {
+            // Validate index against allChannels array (not 'channels')
+            if (index < 0 || index >= allChannels.length) {
+                console.error('Invalid channel index');
+                return;
+            }
+            
+            // Get the channel from allChannels array
+            var channel = allChannels[index];
+            
+            // Check if channel has a stream link
+            if (channel.streamlink) {
+                var channelNum = padNumber(index + 1, 3);
+                window.location.href = 'player.html?stream=' + encodeURIComponent(channel.streamlink) + 
+                                      '&title=' + encodeURIComponent(channel.chtitle || 'Channel') +
+                                      '&channel=' + channelNum +
+                                      '&logo=' + encodeURIComponent(channel.chlogo || '');
+            } else {
+                alert('Stream not available for this channel');
+            }
+        }
+        
+        // Reinitialize remote control
+        function reinitRemote() {
+            if (typeof RemoteControl !== 'undefined' && RemoteControl.init) {
+                setTimeout(function() {
+                    RemoteControl.init({
+                        focusableSelector: '.back-button, .search-box input, .pill-btn, .channel-card',
+                        wrapNavigation: true,
+                        autoFocus: false,
+                        debug: false
+                    });
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

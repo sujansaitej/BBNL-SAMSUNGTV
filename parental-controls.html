@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Parental Controls</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/forms.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/parental-controls.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+
+<body class="dark-mode">
+    <div class="parental-controls-container">
+        <!-- Top Header -->
+        <header class="pc-header">
+            <div class="pc-header-left">
+                <div class="pc-logo">BBNL</div>
+            </div>
+            <div class="pc-header-center">
+                <div class="pc-search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search Channels">
+                </div>
+            </div>
+            <div class="pc-header-right">
+                <button class="pc-icon-btn" onclick="window.location.href='homepage.html'" aria-label="Home">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="pc-icon-btn" onclick="window.location.href='notifications.html'"
+                    aria-label="Notifications">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="pc-profile-avatar">
+                    <img src="https://i.pravatar.cc/150?u=user1" alt="User Profile">
+                </div>
+            </div>
+        </header>
+
+        <div class="pc-layout">
+            <!-- Left Sidebar Navigation -->
+            <aside class="pc-sidebar">
+                <nav class="pc-nav">
+                    <a href="#" class="pc-nav-item active" data-section="parental">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Parental Controls</span>
+                    </a>
+                    <a href="#" class="pc-nav-item" data-section="display">
+                        <i class="fas fa-tv"></i>
+                        <span>Display</span>
+                    </a>
+                    <a href="#" class="pc-nav-item" data-section="remote">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Remote Description</span>
+                    </a>
+                    <a href="#" class="pc-nav-item" data-section="reset">
+                        <i class="fas fa-redo"></i>
+                        <span>Reset App</span>
+                    </a>
+                    <a href="#" class="pc-nav-item" data-section="about">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About App</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content Panel -->
+            <div role="main" class="pc-main-content">
+                <div class="pc-content-panel">
+                    <div class="pc-panel-header">
+                        <h1 class="pc-title">Parental Controls</h1>
+                        <p class="pc-subtitle">Manage content restriction and PIN settings for your device</p>
+                    </div>
+
+                    <div class="pc-settings-cards">
+                        <!-- Enable Parental Controls Card -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Enable Parental Controls</h3>
+                                </div>
+                                <div class="pc-card-control">
+                                    <label class="pc-toggle-switch">
+                                        <input type="checkbox" id="enableParental" checked>
+                                        <span class="pc-toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Set PIN Card -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Set PIN</h3>
+                                    <p class="pc-card-description">A PIN required to change settings and bypass
+                                        restrictions.</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn" id="changePinBtn">Change</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Rating Card -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Content Rating</h3>
+                                    <p class="pc-card-description">Restrict Movies and TV shows on their rating</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn" id="setRatingBtn">Set Rating</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- App Restriction Card -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">App Restriction</h3>
+                                    <p class="pc-card-description">Block access to specific app</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn" id="manageAppsBtn">Manage</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript for TV Remote Navigation -->
+    <script src="js/parental-controls.js"></script>
+    <script>
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.pc-nav-item, .pc-action-btn, .pc-toggle-switch input, button, a, input',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

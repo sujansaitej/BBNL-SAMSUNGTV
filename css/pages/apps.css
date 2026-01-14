@@ -1,0 +1,89 @@
+/* Apps Page Content */
+.apps-page-content {
+    padding: 40px 60px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+}
+
+/* Tabs Navigation */
+.apps-category-tabs {
+    display: none;
+}
+
+.apps-tab-btn {
+    background: none;
+    border: none;
+    color: #b0bec5;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    padding-bottom: 10px;
+    position: relative;
+    -webkit-transition: color 0.3s;
+    transition: color 0.3s;
+}
+
+.apps-tab-btn.active {
+    color: #ffffff;
+
+}
+
+.apps-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -11px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #ffffff;
+
+    border-radius: 2px 2px 0 0;
+}
+
+/* Filter Pills */
+.apps-filter-pills {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.apps-filter-pills > * {
+    margin-right: 12px;
+    margin-bottom: 12px;
+}
+
+/* Apps Section */
+.apps-section {
+    margin-bottom: 60px;
+}
+
+.apps-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+
+    margin-bottom: 30px;
+    letter-spacing: 0.5px;
+}
+
+/* Apps Grid - Using Flexbox instead of Grid */
+.apps-grid-view {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+    margin: -17.5px;
+}
+
+.apps-grid-view > * {
+    width: calc(20% - 35px);
+    min-width: 180px;
+    margin: 17.5px;
+}
+    

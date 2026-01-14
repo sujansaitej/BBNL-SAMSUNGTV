@@ -1,0 +1,13 @@
+{
+    "esversion": 5,
+    "browser": true,
+    "devel": true,
+    "undef": false,
+    "unused": false,
+    "strict": false,
+    "globals": {
+        "tizen": true,
+        "webapis": true,
+        "axios": true
+    }
+}

@@ -1,0 +1,369 @@
+/* Main Header */
+.main-header {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    padding: 0.75rem 2.5rem;
+    background: #000000;
+    border-bottom: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 3.75rem;
+}
+
+body.light-mode .main-header {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.header-left {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.header-left > * {
+    margin-right: 1.25rem;
+}
+
+.header-left > *:last-child {
+    margin-right: 0;
+}
+
+.header-right {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.header-right > * {
+    margin-right: 1rem;
+}
+
+.header-right > *:last-child {
+    margin-right: 0;
+}
+
+.logo {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.logo > * {
+    margin-right: 0.5rem;
+}
+
+.logo > *:last-child {
+    margin-right: 0;
+}
+
+.logo::before {
+    content: "✦";
+    color: #ffc107;
+    font-size: 1.125rem;
+}
+
+body.light-mode .logo {
+    color: #0b1113;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 1.125rem;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+body.light-mode .menu-btn {
+    color: #0b1113;
+}
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.dark-mode-toggle > * {
+    margin-right: 0.625rem;
+}
+
+.dark-mode-toggle > *:last-child {
+    margin-right: 0;
+}
+
+.dark-mode-toggle span {
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+body.light-mode .dark-mode-toggle span {
+    color: #0b1113;
+}
+
+/* Settings Top Header */
+.settings-top-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9375rem 1.875rem;
+    background: #12151a;
+    border-bottom: 1px solid #30363d;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+}
+
+.settings-header-left {
+    display: flex;
+    align-items: center;
+}
+
+.settings-header-right {
+    display: flex;
+    align-items: center;
+}
+
+.settings-header-right > * {
+    margin-right: 15px;
+}
+
+.settings-header-right > *:last-child {
+    margin-right: 0;
+}
+
+/* Top Header (General Layout) */
+.top-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 30px;
+    background: #12151a;
+    border-bottom: 1px solid #30363d;
+    position: fixed;
+    top: 0;
+    z-index: 100;
+
+}
+
+.top-header > * {
+    margin-right: 20px;
+}
+
+.top-header > *:last-child {
+    margin-right: 0;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 30px;
+}
+
+.header-controls > * {
+    margin-right: 15px;
+}
+
+.header-controls > *:last-child {
+    margin-right: 0;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+.profile-menu img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+.profile-menu:hover img {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+    -webkit-box-shadow: 0 0 0 2px #3b82f6;
+    box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.profile-menu {
+    cursor: pointer;
+    position: relative;
+}
+
+/* Profile Dropdown */
+.profile-dropdown {
+    position: fixed;
+    top: 70px;
+    right: 30px;
+    background: #12151a;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    width: 280px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    animation: slideInFromTop 0.3s ease-out;
+}
+
+.profile-dropdown-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #30363d;
+}
+
+.profile-dropdown-header h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.profile-dropdown-list {
+    padding: 8px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.profile-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.profile-dropdown-item > * {
+    margin-right: 12px;
+}
+
+.profile-dropdown-item > *:last-child {
+    margin-right: 0;
+}
+
+.profile-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.profile-dropdown-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.profile-dropdown-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.profile-dropdown-info > * {
+    margin-right: 8px;
+}
+
+.profile-dropdown-info > *:last-child {
+    margin-right: 0;
+}
+
+.profile-dropdown-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    margin: 0;
+}
+
+.profile-dropdown-badge {
+    background: #3b82f6;
+    color: white;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.profile-check {
+    color: #3b82f6;
+    flex-shrink: 0;
+    display: none;
+}
+
+.profile-dropdown-footer {
+    border-top: 1px solid #30363d;
+    padding: 8px 0;
+}
+
+.profile-dropdown-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #b0bec5;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.profile-dropdown-link > * {
+    margin-right: 12px;
+}
+
+.profile-dropdown-link > *:last-child {
+    margin-right: 0;
+}
+
+.profile-dropdown-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+.profile-dropdown-link svg {
+    flex-shrink: 0;
+}

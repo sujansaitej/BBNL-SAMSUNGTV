@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Movies</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/homepages.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <script src="js/script.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">BBNL</h1>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="homepage.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="tv-channels.html" class="nav-item">
+                    <i class="fas fa-tv"></i>
+                    <span>Live Channels</span>
+                </a>
+                <a href="movies.html" class="nav-item active">
+                    <i class="fas fa-film"></i>
+                    <span>Movies</span>
+                </a>
+                <a href="shows.html" class="nav-item">
+                    <i class="fas fa-video"></i>
+                    <span>Shows</span>
+                </a>
+                <a href="subscriptions.html" class="nav-item">
+                    <i class="fas fa-gem"></i>
+                    <span>Subscription</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="favorites.html" class="nav-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorites</span>
+                </a>
+                <a href="notifications.html" class="nav-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notification</span>
+                </a>
+                <a href="give-feedback.html" class="nav-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Give Feedback</span>
+                </a>
+                <a href="help-desk.html" class="nav-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Help Desk</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div role="main" class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search Movies">
+                </div>
+
+                <div class="header-controls">
+                    <button class="header-icon-btn" onclick="window.location.href='homepage.html'"><i
+                            class="fas fa-home"></i></button>
+                    <button class="header-icon-btn" onclick="window.location.href='notifications.html'"><i
+                            class="fas fa-bell"></i></button>
+                    <div class="profile-menu">
+                        <img src="https://i.pravatar.cc/150?u=alex" alt="User" id="current-profile-avatar"
+                            style="width: 32px; height: 32px; border-radius: 50%;">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Movies Section -->
+            <section class="content-section">
+                <h2 class="section-title">Movies</h2>
+
+                <div class="filter-pills-container">
+                    <button class="pill-btn active">All</button>
+                    <button class="pill-btn">Action</button>
+                    <button class="pill-btn">Comedy</button>
+                    <button class="pill-btn">Drama</button>
+                    <button class="pill-btn">Sci-Fi</button>
+                </div>
+
+                <h3>Popular Movies</h3>
+                <!-- Reusing channels-grid class but with movie content styles -->
+                <div class="channels-grid large"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+                    <!-- Movie 1 -->
+                    <div class="media-item" style="width: 100%;">
+                        <div class="media-icon-box movie-box black-bg" style="aspect-ratio: 2/3;">
+                            <img src="https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Action+Movie"
+                                alt="Action Movie" class="channel-logo-img"
+                                style="object-fit: cover; width: 100%; height: 100%;">
+                            <div class="favorite-icon-overlay"
+                                style="position:absolute; bottom:10px; right:10px; width:30px; height:30px; background:red; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                onclick="event.stopPropagation(); FavoritesManager.toggleFavorite({id: 'mov-1', title: 'Action Movie', image: 'https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Action+Movie'})">
+                                <i class="far fa-heart" style="color: white; font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3>Action Movie</h3>
+                            <p>Action</p>
+                        </div>
+                    </div>
+
+                    <!-- Movie 2 -->
+                    <div class="media-item" style="width: 100%;">
+                        <div class="media-icon-box movie-box black-bg" style="aspect-ratio: 2/3;">
+                            <img src="https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Comedy+Night"
+                                alt="Comedy Night" class="channel-logo-img"
+                                style="object-fit: cover; width: 100%; height: 100%;">
+                            <div class="favorite-icon-overlay"
+                                style="position:absolute; bottom:10px; right:10px; width:30px; height:30px; background:red; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                onclick="event.stopPropagation(); FavoritesManager.toggleFavorite({id: 'mov-2', title: 'Comedy Night', image: 'https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Comedy+Night'})">
+                                <i class="far fa-heart" style="color: white; font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3>Comedy Night</h3>
+                            <p>Comedy</p>
+                        </div>
+                    </div>
+
+                    <!-- Movie 3 -->
+                    <div class="media-item" style="width: 100%;">
+                        <div class="media-icon-box movie-box black-bg" style="aspect-ratio: 2/3;">
+                            <img src="https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Sci-Fi+World"
+                                alt="Sci-Fi World" class="channel-logo-img"
+                                style="object-fit: cover; width: 100%; height: 100%;">
+                            <div class="favorite-icon-overlay"
+                                style="position:absolute; bottom:10px; right:10px; width:30px; height:30px; background:red; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                onclick="event.stopPropagation(); FavoritesManager.toggleFavorite({id: 'mov-3', title: 'Sci-Fi World', image: 'https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Sci-Fi+World'})">
+                                <i class="far fa-heart" style="color: white; font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3>Sci-Fi World</h3>
+                            <p>Sci-Fi</p>
+                        </div>
+                    </div>
+
+                    <!-- Movie 4 -->
+                    <div class="media-item" style="width: 100%;">
+                        <div class="media-icon-box movie-box black-bg" style="aspect-ratio: 2/3;">
+                            <img src="https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Romance" alt="Romance"
+                                class="channel-logo-img" style="object-fit: cover; width: 100%; height: 100%;">
+                            <div class="favorite-icon-overlay"
+                                style="position:absolute; bottom:10px; right:10px; width:30px; height:30px; background:red; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                onclick="event.stopPropagation(); FavoritesManager.toggleFavorite({id: 'mov-4', title: 'Romance', image: 'https://via.placeholder.com/300x450/1a1a1a/ffffff?text=Romance'})">
+                                <i class="far fa-heart" style="color: white; font-size: 14px;"></i>
+                            </div>
+                        </div>
+                        <div class="media-info">
+                            <h3>Romance</h3>
+                            <p>Drama</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Filter functionality (ES5 Compatible)
+        var filterBtns = document.querySelectorAll('.pill-btn');
+        var contentItems = document.querySelectorAll('.media-item');
+
+        for (var fb = 0; fb < filterBtns.length; fb++) {
+            filterBtns[fb].addEventListener('click', function (e) {
+                // Remove active class from all buttons
+                for (var fbi = 0; fbi < filterBtns.length; fbi++) {
+                    filterBtns[fbi].classList.remove('active');
+                }
+                // Add active class to clicked button
+                e.target.classList.add('active');
+
+                var filterValue = e.target.innerText.trim().toLowerCase();
+
+                for (var ci = 0; ci < contentItems.length; ci++) {
+                    var item = contentItems[ci];
+                    var genreTag = item.querySelector('.media-info p');
+                    if (genreTag) {
+                        var genre = genreTag.innerText.toLowerCase();
+
+                        if (filterValue === 'all') {
+                            item.style.display = ''; // Reset
+                        } else if (genre.indexOf(filterValue) !== -1) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Make Media Items Clickable (Navigate to Player)
+        var mediaItems = document.querySelectorAll('.media-item');
+        for (var mi = 0; mi < mediaItems.length; mi++) {
+            mediaItems[mi].style.cursor = 'pointer';
+            mediaItems[mi].addEventListener('click', function (e) {
+                // Prevent if clicking the favorite heart
+                if (e.target.closest('.favorite-icon-overlay') || e.target.classList.contains('fa-heart')) {
+                    return;
+                }
+                var titleEl = this.querySelector('h3');
+                var title = titleEl ? titleEl.innerText : 'Unknown Title';
+                window.location.href = 'player.html?title=' + encodeURIComponent(title);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.media-item, .sidebar-menu-item, .pill-btn, button, a, input',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

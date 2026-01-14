@@ -1,0 +1,362 @@
+/* ========================================================
+   CSS COLOR DEFINITIONS
+   Samsung Tizen TV Compatible - No CSS Variables
+   Direct color values for Tizen compatibility
+   ======================================================== */
+
+/* 
+   COLOR REFERENCE (for developers):
+   Primary Color: #3b82f6
+   Secondary Color: #6c757d
+   Danger Color: #dc3545
+   Success Color: #28a745
+   Dark Background: #000000
+   Card Background: #12151a
+   Input Background: #0d1117
+   Text Primary: #ffffff
+   Text Secondary: #6b7280
+   Border Color: #30363d
+   Accent Color: #ffc107
+*/
+
+/* Light mode overrides - use direct class selectors */
+body.light-mode .main-header {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(11, 17, 19, 0.08);
+}
+
+body.light-mode .header-pill-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #6c757d;
+}
+
+body.light-mode .header-pill-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #0b1113;
+}
+
+body.light-mode .media-info h3 {
+    color: #0b1113;
+}
+
+body.light-mode .media-info p {
+    color: #6c757d;
+}
+
+body.light-mode .media-item.active .media-icon-box {
+    border-color: #3b82f6;
+}
+
+body.light-mode .view-all-box {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #0b1113;
+}
+
+body.light-mode .app-tile {
+    background: #ffffff;
+    border-color: rgba(11, 17, 19, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .app-tile:hover {
+    background: #f8f9fa;
+    border-color: #3b82f6;
+}
+
+body.light-mode .app-tile i {
+    color: #3b82f6;
+}
+
+body.light-mode .app-tile-content p {
+    color: #0b1113;
+}
+
+body.light-mode .favorites-container h1 {
+    color: #0b1113;
+}
+
+body.light-mode .pill-btn {
+    border-color: #ccc;
+    color: #6c757d;
+}
+
+body.light-mode .pill-btn:hover,
+body.light-mode .pill-btn.active {
+    background: #0b1113;
+    color: white;
+    border-color: #0b1113;
+}
+
+body.light-mode .channel-info h3 {
+    color: #0b1113;
+}
+
+body.light-mode .apps-tab-btn.active {
+    color: #0b1113;
+}
+
+body.light-mode .apps-tab-btn.active::after {
+    background-color: #0b1113;
+}
+
+body.light-mode .app-filter-pill {
+    border-color: #ddd;
+    color: #6c757d;
+}
+
+body.light-mode .app-filter-pill:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #6c757d;
+}
+
+body.light-mode .app-filter-pill.active {
+    background: #0b1113;
+    color: white;
+}
+
+body.light-mode .app-logo-box {
+    background: linear-gradient(145deg, #fff, #f0f0f0);
+    border-color: #eee;
+}
+
+body.light-mode .new-app-card:hover .app-logo-box {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .language-dropdown-menu {
+    background: #fff;
+    border-color: #eee;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .language-option:hover {
+    background: #f5f5f5;
+}
+
+body.light-mode .icon-btn#network-btn,
+body.light-mode .icon-btn#theme-toggle {
+    background: rgba(11, 17, 19, 0.03);
+    color: #0b1113;
+}
+
+/* Additional light mode text fixes */
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode h5,
+body.light-mode h6 {
+    color: #0b1113;
+}
+
+body.light-mode p,
+body.light-mode span,
+body.light-mode div {
+    color: #0b1113;
+}
+
+body.light-mode .sidebar {
+    background: #ffffff;
+    border-right: 1px solid rgba(11, 17, 19, 0.08);
+}
+
+body.light-mode .nav-item {
+    color: #6c757d;
+}
+
+body.light-mode .nav-item:hover {
+    color: #0b1113;
+    background: rgba(0, 123, 255, 0.1);
+}
+
+body.light-mode .nav-item.active {
+    color: #0b1113;
+    background: rgba(0, 123, 255, 0.15);
+}
+
+body.light-mode .top-header {
+    background: #ffffff;
+    border-bottom: 1px solid rgba(11, 17, 19, 0.08);
+}
+
+body.light-mode .app-card-title,
+body.light-mode .app-card-subtitle {
+    color: #0b1113;
+}
+
+body.light-mode .section-title {
+    color: #0b1113;
+}
+
+body.light-mode .content-carousel h2 {
+    color: #0b1113;
+}
+
+body.light-mode .apps-section h2 {
+    color: #0b1113;
+}
+
+/* Light mode button fixes */
+body.light-mode .btn-primary {
+    background: #3b82f6;
+    color: #ffffff;
+}
+
+body.light-mode .btn-secondary {
+    background: #6c757d;
+    color: #ffffff;
+}
+
+body.light-mode .header-pill-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #6c757d;
+}
+
+body.light-mode .header-pill-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #0b1113;
+}
+
+body.light-mode .icon-btn {
+    color: #0b1113;
+}
+
+body.light-mode .icon-btn:hover {
+    background: rgba(0, 123, 255, 0.1);
+}
+
+/* Light mode form inputs */
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode select {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: #0b1113;
+}
+
+body.light-mode input::placeholder {
+    color: #6c757d;
+}
+
+/* Light mode cards */
+body.light-mode .media-item,
+body.light-mode .channel-card,
+body.light-mode .new-app-card {
+    background: #ffffff;
+    border-color: rgba(11, 17, 19, 0.08);
+}
+
+body.light-mode .media-info h3,
+body.light-mode .channel-info h3 {
+    color: #0b1113;
+}
+
+body.light-mode .media-info p,
+body.light-mode .channel-info p {
+    color: #6c757d;
+}
+
+/* Light mode pills and filters */
+body.light-mode .pill-btn,
+body.light-mode .app-filter-pill {
+    border-color: #ccc;
+    color: #6c757d;
+    background: transparent;
+}
+
+body.light-mode .pill-btn:hover,
+body.light-mode .app-filter-pill:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: #6c757d;
+}
+
+body.light-mode .pill-btn.active,
+body.light-mode .app-filter-pill.active {
+    background: #0b1113;
+    color: white;
+    border-color: #0b1113;
+}
+
+/* Light mode settings */
+body.light-mode .settings-section,
+body.light-mode .settings-card {
+    background: #ffffff;
+    border-color: rgba(11, 17, 19, 0.08);
+}
+
+body.light-mode .setting-item {
+    border-bottom-color: rgba(11, 17, 19, 0.05);
+}
+
+body.light-mode .setting-label {
+    color: #0b1113;
+}
+
+body.light-mode .setting-desc {
+    color: #6c757d;
+}
+
+/* Light mode sidebar menu visibility fix */
+body.light-mode .sidebar-menu .sidebar-content {
+    background: #ffffff;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .sidebar-menu-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .sidebar-menu-header .logo {
+    color: #0b1113;
+}
+
+body.light-mode .close-sidebar {
+    color: #0b1113;
+}
+
+body.light-mode .close-sidebar:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+body.light-mode .sidebar-menu-item {
+    color: #495057;
+}
+
+body.light-mode .sidebar-menu-item:hover {
+    background: rgba(0, 123, 255, 0.08);
+    color: #0b1113;
+}
+
+body.light-mode .sidebar-menu-item.active {
+    background: rgba(0, 123, 255, 0.1);
+    color: #3b82f6;
+    border-left: 3px solid #3b82f6;
+}
+
+body.light-mode .sidebar-menu-item i {
+    color: #495057;
+}
+
+body.light-mode .sidebar-menu-item.active i {
+    color: #3b82f6;
+}
+
+body.light-mode .sidebar-menu-footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .sidebar-profile {
+    color: #0b1113;
+}
+
+body.light-mode .sidebar-profile:hover {
+    background: rgba(0, 123, 255, 0.08);
+}
+
+body.light-mode .sidebar-overlay {
+    background: rgba(0, 0, 0, 0.5);
+}

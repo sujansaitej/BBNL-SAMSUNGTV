@@ -1,0 +1,1203 @@
+/* ========================================================
+   BBNL STREAMING PLATFORM - RESPONSIVE TV STYLES
+   Samsung Tizen TV Compatible (ES5 CSS)
+   Supports: 720p (1280x720), 1080p (1920x1080), 4K (3840x2160)
+   ======================================================== */
+
+/* -------------------- ROOT SIZING REFERENCE --------------------
+   Base rem = 16px at 1080p
+   720p:  14px base (0.875x scale)
+   1080p: 16px base (1x scale) 
+   4K:    24px base (1.5x scale)
+   ------------------------------------------------------------ */
+
+/* -------------------- BASE RESPONSIVE VARIABLES --------------------
+   Using clamp() for fluid scaling between breakpoints
+   clamp(min, preferred, max)
+   ------------------------------------------------------------ */
+
+/* Base Typography - Fluid Scaling */
+html {
+    /* Base font size scales from 14px (720p) to 24px (4K) */
+    font-size: 16px; /* Default for 1080p */
+}
+
+body {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* -------------------- TV BREAKPOINTS --------------------
+   720p:  max-width: 1280px, max-height: 720px
+   1080p: min-width: 1281px, max-width: 1920px
+   4K:    min-width: 1921px
+   ------------------------------------------------------------ */
+
+/* ==================== 720p HD (1280x720) ==================== */
+@media screen and (max-width: 1280px) {
+    html {
+        font-size: 14px;
+    }
+
+    /* Container Adjustments */
+    .app-container {
+        padding: 1rem 1.5rem;
+    }
+
+    .main-content {
+        padding: 0;
+    }
+
+    .content-area {
+        padding-top: 3.5rem;
+    }
+
+    /* Header */
+    .main-header {
+        height: 3.5rem;
+        padding: 0.5rem 1.5rem;
+    }
+
+    .logo {
+        font-size: 1.25rem;
+    }
+
+    .logo::before {
+        font-size: 1rem;
+    }
+
+    /* Hero Section */
+    .home-hero-section {
+        height: 18rem;
+        margin: 0 1.5rem 1.5rem;
+        width: calc(100% - 3rem);
+        border-radius: 1rem;
+    }
+
+    .home-hero-section .hero-content {
+        padding-left: 2rem;
+        max-width: 20rem;
+    }
+
+    .home-hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .home-hero-section .subtitle {
+        font-size: 0.875rem;
+    }
+
+    .home-hero-section .description {
+        font-size: 0.75rem;
+        max-width: 18rem;
+    }
+
+    .home-hero-section .tag {
+        padding: 0.25rem 0.625rem;
+        font-size: 0.625rem;
+    }
+
+    .home-hero-section .btn-watch {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.75rem;
+    }
+
+    .home-hero-section .btn-add {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1rem;
+    }
+
+    /* Content Sections */
+    .content-carousel,
+    .content-section {
+        padding: 1rem 1.5rem 1.5rem;
+    }
+
+    .section-title,
+    .content-carousel h2 {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Cards */
+    .app-card,
+    .channel-card {
+        padding: 1rem;
+        border-radius: 0.625rem;
+    }
+
+    .app-card img,
+    .channel-card img {
+        height: 3.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .app-card h3,
+    .channel-card h3 {
+        font-size: 0.875rem;
+    }
+
+    .app-card p,
+    .channel-card p {
+        font-size: 0.625rem;
+    }
+
+    /* Profile Cards */
+    .profile-avatar {
+        width: 5rem;
+        height: 5rem;
+        font-size: 1.5rem;
+        border-radius: 0.625rem;
+    }
+
+    .profile-avatar.large {
+        width: 8rem;
+        height: 8rem;
+        font-size: 2.5rem;
+    }
+
+    .profile-name {
+        font-size: 0.75rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        border-radius: 0.5rem;
+    }
+
+    .btn-large {
+        padding: 0.875rem 1.75rem;
+        font-size: 1rem;
+    }
+
+    .icon-btn {
+        font-size: 1rem;
+        padding: 0.5rem 0.625rem;
+    }
+
+    /* Forms */
+    .form-group input {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.875rem;
+    }
+
+    .form-group label {
+        font-size: 0.75rem;
+    }
+
+    .search-box {
+        width: 100%;
+        max-width: 18rem;
+        padding: 0.5rem 0.875rem;
+    }
+
+    .search-container {
+        width: 14rem;
+    }
+
+    .search-container input {
+        padding: 0.5rem 0.875rem 0.5rem 2rem;
+        font-size: 0.75rem;
+    }
+
+    /* Sidebar */
+    .sidebar-content {
+        width: 14rem;
+    }
+
+    .nav-item {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.75rem;
+    }
+
+    .nav-item i {
+        font-size: 1rem;
+    }
+
+    /* Auth Pages */
+    .auth-card {
+        padding: 2rem 2.5rem;
+        max-width: 22rem;
+    }
+
+    .auth-title {
+        font-size: 1.5rem;
+    }
+
+    .auth-subtitle {
+        font-size: 0.75rem;
+    }
+
+    /* OTP Input */
+    .otp-input {
+        width: 2.5rem;
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+}
+
+/* ==================== 1080p FULL HD (1920x1080) - DEFAULT ==================== */
+@media screen and (min-width: 1281px) and (max-width: 1920px) {
+    html {
+        font-size: 16px;
+    }
+
+    /* Container Adjustments */
+    .app-container {
+        padding: 1.25rem 2.5rem;
+    }
+
+    .content-area {
+        padding-top: 4.375rem;
+    }
+
+    /* Header */
+    .main-header {
+        height: 3.75rem;
+        padding: 0.75rem 2.5rem;
+    }
+
+    .logo {
+        font-size: 1.375rem;
+    }
+
+    /* Hero Section */
+    .home-hero-section {
+        height: 28rem;
+        margin: 0 2.5rem 1.875rem;
+        width: calc(100% - 5rem);
+        border-radius: 1.25rem;
+    }
+
+    .home-hero-section .hero-content {
+        padding-left: 3.125rem;
+        max-width: 31.25rem;
+    }
+
+    .home-hero-section h1 {
+        font-size: 3rem;
+    }
+
+    .home-hero-section .subtitle {
+        font-size: 1rem;
+    }
+
+    .home-hero-section .description {
+        font-size: 0.8125rem;
+        max-width: 25rem;
+    }
+
+    .home-hero-section .tag {
+        padding: 0.3125rem 0.875rem;
+        font-size: 0.75rem;
+    }
+
+    .home-hero-section .btn-watch {
+        padding: 0.75rem 1.75rem;
+        font-size: 0.875rem;
+    }
+
+    .home-hero-section .btn-add {
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.125rem;
+    }
+
+    /* Content Sections */
+    .content-carousel,
+    .content-section {
+        padding: 1.25rem 2.5rem 1.875rem;
+    }
+
+    .section-title,
+    .content-carousel h2 {
+        font-size: 1.375rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Cards */
+    .app-card,
+    .channel-card {
+        padding: 1.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .app-card img,
+    .channel-card img {
+        height: 5rem;
+        margin-bottom: 0.9375rem;
+    }
+
+    .app-card h3,
+    .channel-card h3 {
+        font-size: 1rem;
+    }
+
+    .app-card p,
+    .channel-card p {
+        font-size: 0.75rem;
+    }
+
+    /* Profile Cards */
+    .profile-avatar {
+        width: 7.5rem;
+        height: 7.5rem;
+        font-size: 2rem;
+        border-radius: 0.75rem;
+    }
+
+    .profile-avatar.large {
+        width: 12.5rem;
+        height: 12.5rem;
+        font-size: 4rem;
+    }
+
+    .profile-name {
+        font-size: 0.875rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+    }
+
+    .btn-large {
+        padding: 1rem 2rem;
+        font-size: 1.125rem;
+    }
+
+    /* Forms */
+    .form-group input {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+
+    .search-container {
+        width: 17.5rem;
+    }
+
+    /* Auth Pages */
+    .auth-card {
+        padding: 2.5rem 3rem;
+        max-width: 30rem;
+    }
+
+    .auth-title {
+        font-size: 1.75rem;
+    }
+
+    /* OTP Input */
+    .otp-input {
+        width: 3rem;
+        height: 3.5rem;
+        font-size: 1.5rem;
+    }
+}
+
+/* ==================== 4K UHD (3840x2160) ==================== */
+@media screen and (min-width: 1921px) {
+    html {
+        font-size: 24px;
+    }
+
+    /* Container Adjustments */
+    .app-container {
+        padding: 2rem 4rem;
+    }
+
+    .content-area {
+        padding-top: 6rem;
+    }
+
+    /* Header */
+    .main-header {
+        height: 5rem;
+        padding: 1rem 4rem;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+
+    .logo::before {
+        font-size: 1.5rem;
+    }
+
+    /* Hero Section */
+    .home-hero-section {
+        height: 40rem;
+        margin: 0 4rem 3rem;
+        width: calc(100% - 8rem);
+        border-radius: 2rem;
+    }
+
+    .home-hero-section .hero-content {
+        padding-left: 5rem;
+        max-width: 50rem;
+    }
+
+    .home-hero-section h1 {
+        font-size: 5rem;
+    }
+
+    .home-hero-section .subtitle {
+        font-size: 1.5rem;
+    }
+
+    .home-hero-section .description {
+        font-size: 1.25rem;
+        max-width: 40rem;
+    }
+
+    .home-hero-section .tag {
+        padding: 0.5rem 1.25rem;
+        font-size: 1rem;
+    }
+
+    .home-hero-section .btn-watch {
+        padding: 1rem 2.5rem;
+        font-size: 1.25rem;
+        border-radius: 2rem;
+    }
+
+    .home-hero-section .btn-add {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1.75rem;
+    }
+
+    /* Content Sections */
+    .content-carousel,
+    .content-section {
+        padding: 2rem 4rem 3rem;
+    }
+
+    .section-title,
+    .content-carousel h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Cards */
+    .app-card,
+    .channel-card {
+        padding: 2rem;
+        border-radius: 1rem;
+    }
+
+    .app-card img,
+    .channel-card img {
+        height: 8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .app-card h3,
+    .channel-card h3 {
+        font-size: 1.5rem;
+    }
+
+    .app-card p,
+    .channel-card p {
+        font-size: 1rem;
+    }
+
+    /* Profile Cards */
+    .profile-avatar {
+        width: 12rem;
+        height: 12rem;
+        font-size: 3rem;
+        border-radius: 1rem;
+    }
+
+    .profile-avatar.large {
+        width: 20rem;
+        height: 20rem;
+        font-size: 6rem;
+    }
+
+    .profile-name {
+        font-size: 1.25rem;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 1rem 2.5rem;
+        font-size: 1.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .btn-large {
+        padding: 1.5rem 3rem;
+        font-size: 1.5rem;
+    }
+
+    .icon-btn {
+        font-size: 1.5rem;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Forms */
+    .form-group input {
+        padding: 1rem 1.5rem;
+        font-size: 1.25rem;
+        border-radius: 0.75rem;
+    }
+
+    .form-group label {
+        font-size: 1rem;
+    }
+
+    .search-box {
+        padding: 0.875rem 1.25rem;
+    }
+
+    .search-container {
+        width: 25rem;
+    }
+
+    .search-container input {
+        padding: 0.875rem 1.25rem 0.875rem 3rem;
+        font-size: 1rem;
+    }
+
+    /* Sidebar */
+    .sidebar-content {
+        width: 22rem;
+    }
+
+    .nav-item {
+        padding: 1rem 1.25rem;
+        font-size: 1.125rem;
+    }
+
+    .nav-item i {
+        font-size: 1.5rem;
+    }
+
+    /* Auth Pages */
+    .auth-card {
+        padding: 4rem 5rem;
+        max-width: 45rem;
+    }
+
+    .auth-title {
+        font-size: 2.5rem;
+    }
+
+    .auth-subtitle {
+        font-size: 1.125rem;
+    }
+
+    /* OTP Input */
+    .otp-input {
+        width: 4.5rem;
+        height: 5.5rem;
+        font-size: 2rem;
+    }
+
+    /* Step Indicator */
+    .step-dot {
+        width: 1rem;
+        height: 1rem;
+    }
+
+    .step-label {
+        font-size: 1.125rem;
+    }
+
+    .step-line {
+        width: 5rem;
+    }
+}
+
+/* ==================== RESPONSIVE GRIDS ==================== */
+
+/* Channel Grid - Responsive */
+.channel-grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin: -0.625rem;
+    width: calc(100% + 1.25rem);
+}
+
+.channel-grid .channel-card {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 calc(16.666% - 1.25rem);
+    flex: 0 0 calc(16.666% - 1.25rem);
+    max-width: calc(16.666% - 1.25rem);
+    margin: 0.625rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .channel-grid {
+        margin: -0.4375rem;
+        width: calc(100% + 0.875rem);
+    }
+    
+    .channel-grid .channel-card {
+        -ms-flex: 0 0 calc(20% - 0.875rem);
+        flex: 0 0 calc(20% - 0.875rem);
+        max-width: calc(20% - 0.875rem);
+        margin: 0.4375rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .channel-grid {
+        margin: -1rem;
+        width: calc(100% + 2rem);
+    }
+    
+    .channel-grid .channel-card {
+        -ms-flex: 0 0 calc(12.5% - 2rem);
+        flex: 0 0 calc(12.5% - 2rem);
+        max-width: calc(12.5% - 2rem);
+        margin: 1rem;
+    }
+}
+
+/* App Grid - Responsive */
+.app-grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin: -0.75rem;
+    width: calc(100% + 1.5rem);
+}
+
+.app-grid .app-card,
+.app-grid .new-app-card {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 calc(20% - 1.5rem);
+    flex: 0 0 calc(20% - 1.5rem);
+    max-width: calc(20% - 1.5rem);
+    margin: 0.75rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .app-grid {
+        margin: -0.5rem;
+        width: calc(100% + 1rem);
+    }
+    
+    .app-grid .app-card,
+    .app-grid .new-app-card {
+        -ms-flex: 0 0 calc(25% - 1rem);
+        flex: 0 0 calc(25% - 1rem);
+        max-width: calc(25% - 1rem);
+        margin: 0.5rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .app-grid {
+        margin: -1.25rem;
+        width: calc(100% + 2.5rem);
+    }
+    
+    .app-grid .app-card,
+    .app-grid .new-app-card {
+        -ms-flex: 0 0 calc(16.666% - 2.5rem);
+        flex: 0 0 calc(16.666% - 2.5rem);
+        max-width: calc(16.666% - 2.5rem);
+        margin: 1.25rem;
+    }
+}
+
+/* ==================== HORIZONTAL SCROLL CAROUSELS ==================== */
+
+.content-row,
+.media-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    padding-bottom: 0.5rem;
+}
+
+.content-row::-webkit-scrollbar,
+.media-row::-webkit-scrollbar {
+    display: none;
+}
+
+.content-row .media-item,
+.content-row .channel-card-home,
+.media-row .media-item {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 10rem;
+    margin-right: 1.25rem;
+}
+
+.content-row .media-item:last-child,
+.content-row .channel-card-home:last-child,
+.media-row .media-item:last-child {
+    margin-right: 0;
+}
+
+@media screen and (max-width: 1280px) {
+    .content-row .media-item,
+    .content-row .channel-card-home,
+    .media-row .media-item {
+        width: 7rem;
+        margin-right: 0.875rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .content-row .media-item,
+    .content-row .channel-card-home,
+    .media-row .media-item {
+        width: 16rem;
+        margin-right: 2rem;
+    }
+}
+
+/* ==================== TV SAFE AREA ==================== */
+
+/* Ensure content doesn't get cut off on TV edges */
+.tv-safe-area {
+    padding: 2.5%; /* 5% total safe area */
+}
+
+@media screen and (max-width: 1280px) {
+    .tv-safe-area {
+        padding: 2%;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .tv-safe-area {
+        padding: 3%;
+    }
+}
+
+/* ==================== FOCUS SCALING FOR TV ==================== */
+
+/* Ensure focused elements are clearly visible on all resolutions */
+.remote-focused {
+    outline-width: 0.1875rem;
+    outline-offset: 0.125rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .remote-focused {
+        outline-width: 0.125rem;
+        outline-offset: 0.0625rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .remote-focused {
+        outline-width: 0.25rem;
+        outline-offset: 0.1875rem;
+    }
+    
+    button.remote-focused,
+    .btn.remote-focused {
+        -webkit-transform: scale(1.08);
+        transform: scale(1.08);
+    }
+    
+    .channel-card.remote-focused,
+    .app-tile.remote-focused {
+        -webkit-transform: scale(1.12);
+        transform: scale(1.12);
+    }
+}
+
+/* ==================== PLAYER RESPONSIVE STYLES ==================== */
+
+/* Video Player Info Overlay */
+.info-overlay {
+    padding: 2.5rem 2.5rem 1.25rem;
+}
+
+.channel-logo {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+}
+
+.channel-name {
+    font-size: 1.75rem;
+}
+
+.channel-number {
+    font-size: 1rem;
+}
+
+.program-title {
+    font-size: 1.25rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .info-overlay {
+        padding: 1.5rem 1.5rem 0.75rem;
+    }
+    
+    .channel-logo {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.5rem;
+    }
+    
+    .channel-name {
+        font-size: 1.25rem;
+    }
+    
+    .channel-number {
+        font-size: 0.75rem;
+    }
+    
+    .program-title {
+        font-size: 0.875rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .info-overlay {
+        padding: 4rem 4rem 2rem;
+    }
+    
+    .channel-logo {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 1rem;
+    }
+    
+    .channel-name {
+        font-size: 2.5rem;
+    }
+    
+    .channel-number {
+        font-size: 1.5rem;
+    }
+    
+    .program-title {
+        font-size: 1.75rem;
+    }
+}
+
+/* ==================== MODAL RESPONSIVE STYLES ==================== */
+
+.modal-content,
+.network-modal-content {
+    width: 90%;
+    max-width: 30rem;
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .modal-content,
+    .network-modal-content {
+        max-width: 22rem;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .modal-content,
+    .network-modal-content {
+        max-width: 45rem;
+        padding: 3rem;
+        border-radius: 1.5rem;
+    }
+}
+
+/* ==================== ERROR SCREEN RESPONSIVE ==================== */
+
+.error-screen {
+    padding: 2rem;
+}
+
+.error-icon svg {
+    width: 8rem;
+    height: 8rem;
+}
+
+.error-title {
+    font-size: 2rem;
+}
+
+.error-message {
+    font-size: 1.125rem;
+    max-width: 30rem;
+}
+
+.error-actions .btn {
+    min-width: 12rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .error-screen {
+        padding: 1.5rem;
+    }
+    
+    .error-icon svg {
+        width: 5rem;
+        height: 5rem;
+    }
+    
+    .error-title {
+        font-size: 1.5rem;
+    }
+    
+    .error-message {
+        font-size: 0.875rem;
+        max-width: 22rem;
+    }
+    
+    .error-actions .btn {
+        min-width: 8rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .error-screen {
+        padding: 3rem;
+    }
+    
+    .error-icon svg {
+        width: 12rem;
+        height: 12rem;
+    }
+    
+    .error-title {
+        font-size: 3rem;
+    }
+    
+    .error-message {
+        font-size: 1.5rem;
+        max-width: 45rem;
+    }
+    
+    .error-actions .btn {
+        min-width: 16rem;
+    }
+}
+
+/* ==================== SETTINGS PAGE RESPONSIVE ==================== */
+
+.settings-container {
+    padding: 1.5rem;
+    max-width: 50rem;
+}
+
+.settings-card {
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .settings-container {
+        padding: 1rem;
+        max-width: 40rem;
+    }
+    
+    .settings-card {
+        padding: 1rem;
+        border-radius: 0.5rem;
+    }
+    
+    .settings-title {
+        font-size: 1.125rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .settings-container {
+        padding: 2.5rem;
+        max-width: 75rem;
+    }
+    
+    .settings-card {
+        padding: 2.5rem;
+        border-radius: 1rem;
+    }
+    
+    .settings-title {
+        font-size: 2rem;
+    }
+}
+
+/* ==================== NOTIFICATION PAGE RESPONSIVE ==================== */
+
+.notification-item {
+    padding: 1rem 1.25rem;
+    border-radius: 0.625rem;
+}
+
+.notification-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+}
+
+.notification-title {
+    font-size: 1rem;
+}
+
+.notification-text {
+    font-size: 0.875rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .notification-item {
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+    }
+    
+    .notification-icon {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
+    }
+    
+    .notification-title {
+        font-size: 0.875rem;
+    }
+    
+    .notification-text {
+        font-size: 0.75rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .notification-item {
+        padding: 1.5rem 2rem;
+        border-radius: 0.875rem;
+    }
+    
+    .notification-icon {
+        width: 4rem;
+        height: 4rem;
+        font-size: 2rem;
+    }
+    
+    .notification-title {
+        font-size: 1.5rem;
+    }
+    
+    .notification-text {
+        font-size: 1.125rem;
+    }
+}
+
+/* ==================== SUBSCRIPTION PAGE RESPONSIVE ==================== */
+
+.plan-card {
+    padding: 2rem;
+    border-radius: 1rem;
+    min-width: 16rem;
+}
+
+.plan-price {
+    font-size: 2.5rem;
+}
+
+.plan-name {
+    font-size: 1.25rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .plan-card {
+        padding: 1.25rem;
+        border-radius: 0.75rem;
+        min-width: 12rem;
+    }
+    
+    .plan-price {
+        font-size: 1.75rem;
+    }
+    
+    .plan-name {
+        font-size: 1rem;
+    }
+}
+
+@media screen and (min-width: 1921px) {
+    .plan-card {
+        padding: 3rem;
+        border-radius: 1.25rem;
+        min-width: 22rem;
+    }
+    
+    .plan-price {
+        font-size: 4rem;
+    }
+    
+    .plan-name {
+        font-size: 1.75rem;
+    }
+}
+
+/* ==================== UTILITY CLASSES ==================== */
+
+/* Responsive spacing utilities */
+.p-responsive {
+    padding: 1.25rem;
+}
+
+.m-responsive {
+    margin: 1.25rem;
+}
+
+/* gap-responsive uses margin on children as fallback for Tizen */
+.gap-responsive > * {
+    margin: 0.625rem;
+}
+
+.gap-responsive {
+    margin: -0.625rem;
+}
+
+@media screen and (max-width: 1280px) {
+    .p-responsive { padding: 0.875rem; }
+    .m-responsive { margin: 0.875rem; }
+    .gap-responsive > * { margin: 0.4375rem; }
+    .gap-responsive { margin: -0.4375rem; }
+}
+
+@media screen and (min-width: 1921px) {
+    .p-responsive { padding: 2rem; }
+    .m-responsive { margin: 2rem; }
+    .gap-responsive > * { margin: 1rem; }
+    .gap-responsive { margin: -1rem; }
+}
+
+/* Responsive text sizes */
+.text-lg { font-size: 1.25rem; }
+.text-xl { font-size: 1.5rem; }
+.text-2xl { font-size: 2rem; }
+
+@media screen and (max-width: 1280px) {
+    .text-lg { font-size: 1rem; }
+    .text-xl { font-size: 1.125rem; }
+    .text-2xl { font-size: 1.5rem; }
+}
+
+@media screen and (min-width: 1921px) {
+    .text-lg { font-size: 1.5rem; }
+    .text-xl { font-size: 2rem; }
+    .text-2xl { font-size: 3rem; }
+}

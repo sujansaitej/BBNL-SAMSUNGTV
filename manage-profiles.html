@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Manage Profiles</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/profile.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <style>
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            background-color: var(--dark-bg);
+        }
+
+        .profile-management {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .profile-management h1 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .profile-management>p {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .profiles-grid {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .profile-card.small {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .profile-card.small:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .profile-card.small.active .profile-avatar {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 4px var(--accent-color);
+        }
+
+        /* Add Profile Button Style */
+        .profile-avatar.add {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px dashed var(--text-secondary);
+        }
+
+        .profile-avatar.add svg {
+            color: var(--text-secondary);
+        }
+
+        .profile-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .profile-card.small.active .profile-name {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        /* Edit Profile Card */
+        .edit-profile {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .edit-profile h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+        }
+
+        .profile-edit-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar.large {
+            width: 80px;
+            height: 80px;
+            margin: 0;
+            /* Override auto margins */
+            border: none;
+        }
+
+        .edit-form {
+            flex: 1;
+        }
+
+        .edit-form h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 5px;
+            color: var(--text-primary);
+        }
+
+        .edit-form p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .btn-secondary.small {
+            padding: 6px 16px;
+            font-size: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .edit-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .edit-actions .btn-danger {
+            margin-right: auto;
+            /* Pushes other buttons to right */
+        }
+
+        /* Match Button Styles to Image */
+        .btn {
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        /* Add Profile Section Specific Styles */
+        .add-profile-section {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .add-profile-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .add-profile-section p {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .avatar-carousel-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .avatar-carousel {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .carousel-avatar {
+            border-radius: 50%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-avatar.side {
+            width: 80px;
+            height: 80px;
+            opacity: 0.5;
+            filter: grayscale(0.5);
+        }
+
+        .carousel-avatar.main {
+            width: 120px;
+            height: 120px;
+            border: 4px solid var(--text-primary);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .carousel-nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .carousel-nav-btn:hover {
+            opacity: 1;
+        }
+
+        .upload-photo-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 40px;
+            transition: color 0.3s;
+        }
+
+        .upload-photo-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .add-profile-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .add-profile-form .form-group label {
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .dark-input {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .dark-input:focus {
+            border-color: var(--accent-color);
+        }
+
+        .dark-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .kids-profile-box {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .kids-text span {
+            display: block;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .kids-text p {
+            margin: 0;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        .add-actions.centered {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 0;
+        }
+
+        .btn.pill {
+            border-radius: 50px;
+            padding: 12px 30px;
+            min-width: 120px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .add-profile-section .btn-primary {
+            background-color: #0044cc;
+        }
+
+        .add-profile-section .btn-primary:hover {
+            background-color: #003399;
+        }
+
+        .add-profile-section .btn-secondary {
+            background-color: #1a1a1a;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .add-profile-section .btn-secondary:hover {
+            background-color: var(--border-color);
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="profile-management">
+            <h1>Manage Profiles</h1>
+            <p>Choose a profile or edit, or add a new one</p>
+
+            <div class="profiles-grid">
+                <div class="profile-card small active">
+                    <div class="profile-avatar">
+                        <img src="https://i.pravatar.cc/150?u=alex" alt="Alex">
+                    </div>
+                    <p class="profile-name">Alex</p>
+                </div>
+
+                <div class="profile-card small">
+                    <div class="profile-avatar">
+                        <img src="https://i.pravatar.cc/150?u=catherine" alt="Catherine">
+                    </div>
+                    <p class="profile-name">Catherine</p>
+                </div>
+
+                <div class="profile-card small">
+                    <div class="profile-avatar">
+                        <img src="https://i.pravatar.cc/150?u=tom" alt="Tom">
+                    </div>
+                    <p class="profile-name">Tom</p>
+                </div>
+
+                <div class="profile-card small add-profile">
+                    <div class="profile-avatar add">
+                        <span style="font-size: 24px; font-weight: bold; color: currentColor;">+</span>
+                    </div>
+                    <p class="profile-name">Add Profile</p>
+                </div>
+            </div>
+
+            <div class="edit-profile">
+                <h2>Edit Profile</h2>
+
+                <div class="profile-edit-card">
+                    <div class="profile-avatar large">
+                        <img src="https://i.pravatar.cc/150?u=alex" alt="Alex" id="edit-profile-img">
+                    </div>
+                    <div class="edit-form">
+                        <h3>Alex</h3>
+                        <p>Change your profile details below</p>
+                        <button class="btn btn-secondary small" id="change-avatar-btn">Change Avatar</button>
+                        <input type="file" id="avatar-upload" style="display: none;" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>NickName</label>
+                    <input type="text" value="Alex" id="edit-profile-name">
+                </div>
+
+                <div class="edit-actions">
+                    <button class="btn btn-danger" id="delete-profile-btn">Delete Profile</button>
+                    <button class="btn btn-secondary" id="cancel-profile-btn">Cancel</button>
+                    <button class="btn btn-primary" id="update-profile-btn">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="add-profile-section">
+            <h2>Add Profile</h2>
+            <p>Create a personalized profile for another member of your household</p>
+
+            <div class="avatar-carousel-container">
+                <button class="carousel-nav-btn left" id="carousel-prev"><i class="fas fa-arrow-left"></i></button>
+                <div class="avatar-carousel">
+                    <img src="https://i.pravatar.cc/150?u=new1" alt="Avatar 1" class="carousel-avatar side"
+                        id="carousel-left-img">
+                    <div class="main-avatar-container">
+                        <img src="https://i.pravatar.cc/150?u=new2" alt="Avatar 2" class="carousel-avatar main"
+                            id="carousel-main-img">
+                    </div>
+                    <img src="https://i.pravatar.cc/150?u=new3" alt="Avatar 3" class="carousel-avatar side"
+                        id="carousel-right-img">
+                </div>
+                <button class="carousel-nav-btn right" id="carousel-next"><i class="fas fa-arrow-right"></i></button>
+            </div>
+
+            <div class="upload-photo-btn" id="add-profile-upload-btn">
+                <i class="fas fa-camera"></i>
+                <span>Upload Photo</span>
+            </div>
+            <input type="file" id="add-profile-file-input" style="display: none;" accept="image/*">
+
+            <div class="add-profile-form">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" placeholder="Enter Profile Name" class="dark-input" id="new-profile-name">
+                </div>
+
+                <div class="kids-profile-box">
+                    <div class="kids-text">
+                        <span>Kids Profile</span>
+                        <p>( Only show content rated for ages 12 and under )</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div class="add-actions centered">
+                    <button class="btn btn-primary pill" id="create-profile-btn">Create Profile</button>
+                    <button class="btn btn-secondary pill" id="cancel-create-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ES5 Compatible Profile Management
+        var manageProfilesView = document.querySelector('.profile-management');
+        var addProfileView = document.querySelector('.add-profile-section');
+        var addProfileButton = document.querySelector('.add-profile');
+        var backButton = document.querySelector('.back-btn');
+        var profileCards = document.querySelectorAll('.profiles-grid .profile-card.small:not(.add-profile)');
+
+        addProfileButton.addEventListener('click', function () {
+            manageProfilesView.style.display = 'none';
+            addProfileView.style.display = 'block';
+        });
+
+        backButton.addEventListener('click', function () {
+            addProfileView.style.display = 'none';
+            manageProfilesView.style.display = 'block';
+        });
+
+        for (var pc = 0; pc < profileCards.length; pc++) {
+            profileCards[pc].addEventListener('click', function (e) {
+                for (var pcc = 0; pcc < profileCards.length; pcc++) {
+                    profileCards[pcc].classList.remove('active');
+                }
+                e.currentTarget.classList.add('active');
+            });
+        }
+
+        var avatarOptions = document.querySelectorAll('.avatar-option');
+        for (var ao = 0; ao < avatarOptions.length; ao++) {
+            avatarOptions[ao].addEventListener('click', function (e) {
+                for (var aoo = 0; aoo < avatarOptions.length; aoo++) {
+                    avatarOptions[aoo].classList.remove('active');
+                }
+                e.currentTarget.classList.add('active');
+            });
+        }
+
+        // --- Edit Profile Functionality ---
+        var changeAvatarBtn = document.getElementById('change-avatar-btn');
+        var avatarUpload = document.getElementById('avatar-upload');
+        var editProfileImg = document.getElementById('edit-profile-img');
+        var editProfileName = document.getElementById('edit-profile-name');
+        var deleteBtn = document.getElementById('delete-profile-btn');
+        var cancelBtn = document.getElementById('cancel-profile-btn');
+        var updateBtn = document.getElementById('update-profile-btn');
+
+        // 1. Handle Profile Selection (Populate Form)
+        for (var pf = 0; pf < profileCards.length; pf++) {
+            profileCards[pf].addEventListener('click', function (e) {
+                // Update Active State
+                for (var pfc = 0; pfc < profileCards.length; pfc++) {
+                    profileCards[pfc].classList.remove('active');
+                }
+                e.currentTarget.classList.add('active');
+
+                // Get Data from Card
+                var currentImg = e.currentTarget.querySelector('img').src;
+                var currentName = e.currentTarget.querySelector('.profile-name').innerText;
+
+                // Populate Form
+                editProfileImg.src = currentImg;
+                editProfileName.value = currentName;
+            });
+        }
+
+        // 2. Change Avatar (File Input)
+        if (changeAvatarBtn && avatarUpload) {
+            changeAvatarBtn.addEventListener('click', function () {
+                avatarUpload.click();
+            });
+
+            avatarUpload.addEventListener('change', function (e) {
+                var file = e.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        editProfileImg.src = evt.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 3. Update Profile
+        if (updateBtn) {
+            updateBtn.addEventListener('click', function () {
+                var activeCard = document.querySelector('.profile-card.small.active');
+                if (activeCard) {
+                    var newName = editProfileName.value;
+                    var newImg = editProfileImg.src;
+
+                    // Update Card
+                    activeCard.querySelector('.profile-name').innerText = newName;
+                    activeCard.querySelector('img').src = newImg;
+
+                    // Optional: Visual feedback
+                    var originalText = updateBtn.innerText;
+                    updateBtn.innerText = "Updated!";
+                    setTimeout(function () { updateBtn.innerText = originalText; }, 1500);
+                }
+            });
+        }
+
+        // 4. Cancel (Reset Form)
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function () {
+                var activeCard = document.querySelector('.profile-card.small.active');
+                if (activeCard) {
+                    var currentImg = activeCard.querySelector('img').src;
+                    var currentName = activeCard.querySelector('.profile-name').innerText;
+
+                    editProfileImg.src = currentImg;
+                    editProfileName.value = currentName;
+                }
+            });
+        }
+
+        // 5. Delete Profile
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function () {
+                var activeCard = document.querySelector('.profile-card.small.active');
+                if (activeCard) {
+                    if (confirm("Are you sure you want to delete this profile?")) {
+                        activeCard.remove();
+                        // Select the next available profile or clear form
+                        var nextProfile = document.querySelector('.profile-card.small:not(.add-profile)');
+                        if (nextProfile) {
+                            nextProfile.click(); // Select it
+                        } else {
+                            // No profiles left
+                            editProfileName.value = "";
+                            editProfileImg.src = "";
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Add Profile Functionality ---
+        var createProfileBtn = document.getElementById('create-profile-btn');
+        var cancelCreateBtn = document.getElementById('cancel-create-btn');
+        var carouselPrev = document.getElementById('carousel-prev');
+        var carouselNext = document.getElementById('carousel-next');
+        var carouselMainImg = document.getElementById('carousel-main-img');
+        var carouselLeftImg = document.getElementById('carousel-left-img');
+        var carouselRightImg = document.getElementById('carousel-right-img');
+        var newProfileName = document.getElementById('new-profile-name');
+        var addProfileUploadBtn = document.getElementById('add-profile-upload-btn');
+        var addProfileFileInput = document.getElementById('add-profile-file-input');
+
+        // Avatar Data Mock
+        var avatarList = [
+            "https://i.pravatar.cc/150?u=new1",
+            "https://i.pravatar.cc/150?u=new2",
+            "https://i.pravatar.cc/150?u=new3",
+            "https://i.pravatar.cc/150?u=new4",
+            "https://i.pravatar.cc/150?u=new5",
+            "https://i.pravatar.cc/150?u=new6"
+        ];
+        var currentAvatarIndex = 0;
+
+        function updateCarousel() {
+            // Calculate indices for circular carousel
+            var len = avatarList.length;
+            var leftIndex = (currentAvatarIndex - 1 + len) % len;
+            var rightIndex = (currentAvatarIndex + 1) % len;
+
+            if (carouselMainImg) carouselMainImg.src = avatarList[currentAvatarIndex];
+            if (carouselLeftImg) carouselLeftImg.src = avatarList[leftIndex];
+            if (carouselRightImg) carouselRightImg.src = avatarList[rightIndex];
+        }
+
+        if (carouselPrev) {
+            carouselPrev.addEventListener('click', function () {
+                currentAvatarIndex = (currentAvatarIndex - 1 + avatarList.length) % avatarList.length;
+                updateCarousel();
+            });
+        }
+
+        if (carouselNext) {
+            carouselNext.addEventListener('click', function () {
+                currentAvatarIndex = (currentAvatarIndex + 1) % avatarList.length;
+                updateCarousel();
+            });
+        }
+
+        // Upload Photo for New Profile
+        if (addProfileUploadBtn && addProfileFileInput) {
+            addProfileUploadBtn.addEventListener('click', function () {
+                addProfileFileInput.click();
+            });
+
+            addProfileFileInput.addEventListener('change', function (e) {
+                var file = e.target.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        // Add uploaded image to the list and select it
+                        avatarList.splice(currentAvatarIndex + 1, 0, evt.target.result);
+                        currentAvatarIndex++; // Move to new image
+                        updateCarousel();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // Create Profile
+        if (createProfileBtn) {
+            createProfileBtn.addEventListener('click', function () {
+                var name = newProfileName.value.trim();
+                if (!name) {
+                    alert("Please enter a profile name");
+                    return;
+                }
+
+                var imgSrc = carouselMainImg.src;
+
+                // Save to localStorage
+                var profiles = JSON.parse(localStorage.getItem('bbnl-profiles') || '[]');
+                var newProfile = {
+                    id: Date.now().toString(),
+                    name: name,
+                    avatar: imgSrc
+                };
+                profiles.push(newProfile);
+                localStorage.setItem('bbnl-profiles', JSON.stringify(profiles));
+
+                // Create HTML for new card
+                var newCardDiv = document.createElement('div');
+                newCardDiv.className = 'profile-card small';
+                newCardDiv.setAttribute('data-profile', name);
+                newCardDiv.setAttribute('data-avatar', imgSrc);
+                newCardDiv.innerHTML = '<div class="profile-avatar">' +
+                    '<img src="' + imgSrc + '" alt="' + name + '">' +
+                    '</div>' +
+                    '<p class="profile-name">' + name + '</p>';
+
+                // Add click listener to new card
+                newCardDiv.addEventListener('click', function () {
+                    var allCards = document.querySelectorAll('.profiles-grid .profile-card.small:not(.add-profile)');
+                    for (var ac = 0; ac < allCards.length; ac++) {
+                        allCards[ac].classList.remove('active');
+                    }
+                    newCardDiv.classList.add('active');
+
+                    editProfileImg.src = imgSrc;
+                    editProfileName.value = name;
+                });
+
+                // Insert before the "Add Profile" button
+                var profilesGrid = document.querySelector('.profiles-grid');
+                var addProfileCard = document.querySelector('.profile-card.small.add-profile');
+                profilesGrid.insertBefore(newCardDiv, addProfileCard);
+
+                // Reset and Go Back
+                newProfileName.value = "";
+                addProfileView.style.display = 'none';
+                manageProfilesView.style.display = 'block';
+
+                // Refresh profile avatar if ProfileManager is available
+                if (typeof ProfileManager !== 'undefined') {
+                    ProfileManager.loadProfile();
+                }
+            });
+        }
+
+        // Cancel Creation
+        if (cancelCreateBtn) {
+            cancelCreateBtn.addEventListener('click', function () {
+                newProfileName.value = "";
+                addProfileView.style.display = 'none';
+                manageProfilesView.style.display = 'block';
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.profile-card, .avatar-option, button, a, input',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

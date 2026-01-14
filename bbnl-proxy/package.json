@@ -1,0 +1,18 @@
+{
+  "name": "bbnl-proxy",
+  "version": "1.0.0",
+  "description": "BBNL Production API Proxy Server for Samsung Tizen TV",
+  "main": "../js/proxy/server.js",
+  "scripts": {
+    "start": "node ../js/proxy/server.js",
+    "dev": "node ../js/proxy/server.js"
+  },
+  "keywords": ["bbnl", "proxy", "iptv", "tizen"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
+    "express": "^5.2.1"
+  }
+}

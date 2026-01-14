@@ -1,0 +1,105 @@
+/* Favorites Page Styles */
+.favorites-container {
+    padding: 20px 40px;
+}
+
+.favorites-container h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: white;
+}
+
+/* Filter Pills Container */
+.filter-pills-container {
+    display: flex;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+    flex-wrap: wrap;
+}
+
+.filter-pills-container > * {
+    margin-right: 12px;
+}
+
+.filter-pills-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.filter-pills-container::-webkit-scrollbar-thumb {
+    background: #30363d;
+
+    border-radius: 4px;
+}
+
+/* Favorites Grid */
+.favorites-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px;
+}
+
+.favorites-grid > * {
+    margin: 15px;
+}
+
+/* Channel Card */
+.favorites-grid .channel-card {
+    width: 160px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.favorites-grid .channel-card:hover {
+    transform: scale(1.05);
+}
+
+.channel-logo-box {
+    width: 100%;
+    height: 140px;
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.channel-logo-box img {
+    max-width: 80%;
+    max-height: 80%;
+}
+
+.favorite-icon-overlay {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    background: #ff0000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.favorite-icon-overlay i {
+    color: white;
+    font-size: 14px;
+}
+
+.channel-info h3 {
+    font-size: 16px;
+    color: white;
+    margin: 0 0 4px 0;
+}
+
+.channel-info p {
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}

@@ -1,0 +1,4 @@
+# Ignore node_modules from JSHint validation
+bbnl-proxy/
+bbnl-proxy/node_modules/
+node_modules/

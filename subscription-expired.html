@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Subscription Expired</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <style>
+        .error-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--dark-bg);
+            padding: 20px;
+        }
+
+        .error-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .error-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .error-icon i {
+            font-size: 60px;
+            color: #ffc107;
+        }
+
+        .error-card h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .error-card p {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .error-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .error-actions .btn {
+            width: 100%;
+        }
+
+        .back-link {
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .back-link a {
+            color: #ffc107;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .features-list {
+            text-align: left;
+            margin: 24px 0;
+            padding: 20px;
+            background: rgba(255, 193, 7, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .features-list h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .features-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        /* Light mode styles */
+        body.light-mode .error-container {
+            background: var(--light-bg);
+        }
+
+        body.light-mode .error-icon {
+            background: rgba(255, 193, 7, 0.08);
+        }
+
+        body.light-mode .error-icon i {
+            color: #f59e0b;
+        }
+
+        body.light-mode .features-list {
+            background: rgba(255, 193, 7, 0.03);
+        }
+    </style>
+</head>
+<body class="dark-mode">
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            
+            <h1>Subscription Expired</h1>
+            <p>Your BBNL subscription has expired. Recharge now to continue enjoying unlimited streaming and premium content.</p>
+            
+            <div class="features-list">
+                <h3>Renew to get:</h3>
+                <ul>
+                    <li>Access to all OTT platforms</li>
+                    <li>Live TV channels and shows</li>
+                    <li>Unlimited movies and series</li>
+                    <li>HD &amp; 4K streaming quality</li>
+                    <li>Multi-device support</li>
+                </ul>
+            </div>
+            
+            <div class="error-actions">
+                <button class="btn btn-primary" onclick="window.location.href='subscriptions.html'">
+                    <i class="fas fa-credit-card"></i> Recharge Now
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='homepage.html'">
+                    Back to Home
+                </button>
+            </div>
+            
+            <div class="back-link">
+                Questions? <a href="help-desk.html">Contact Support</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Apply theme from localStorage
+        var savedTheme = localStorage.getItem('bbnl-theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.remove('dark-mode');
+            document.body.classList.add('light-mode');
+        }
+        </script>
+        // Initialize remote control
+        document.addEventListener('DOMContentLoaded', function() {
+            RemoteControl.init({
+                focusableSelector: 'button, a',
+                wrapNavigation: true,
+                autoFocus: false,
+                debug: false
+            });
+        });

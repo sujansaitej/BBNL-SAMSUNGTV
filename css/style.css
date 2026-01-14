@@ -1,0 +1,27 @@
+/* ============================================
+   BBNL STREAMING PLATFORM - CSS MANIFEST
+   ============================================ */
+
+/* 1. Base (Variables, Reset, Typography) */
+@import 'base/variable.css';
+@import 'base/reset.css';
+@import 'base/responsive.css';
+
+/* 2. Layout (Header, Sidebar) */
+@import 'layout/header.css';
+@import 'layout/sidebar.css';
+
+/* 3. Components (Buttons, Forms, Cards) */
+@import 'componentes/buttons.css';
+@import 'componentes/forms.css';
+@import 'componentes/cards.css';
+
+/* 4. Pages */
+@import 'pages/auth.css';
+@import 'pages/homepage.css';
+@import 'pages/profile.css';
+@import 'pages/settings.css';
+@import 'pages/subscription.css';
+@import 'pages/apps.css';
+@import 'pages/favorites.css';
+@import 'pages/notifications.css';

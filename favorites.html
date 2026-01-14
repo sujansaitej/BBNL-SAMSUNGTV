@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Favorites</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/favorites.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+
+<body class="dark-mode">
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">BBNL</div>
+            <button class="menu-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search Channels">
+        </div>
+        <div class="header-right">
+            <button class="header-icon-btn" onclick="window.location.href='homepage.html'"><i
+                    class="fas fa-home"></i></button>
+            <button class="header-icon-btn" onclick="window.location.href='notifications.html'"><i
+                    class="fas fa-bell"></i></button>
+            <div class="profile-menu">
+                <img src="https://i.pravatar.cc/150?u=alex" alt="User" id="current-profile-avatar"
+                    style="width: 32px; height: 32px; border-radius: 50%;">
+            </div>
+        </div>
+    </header>
+
+    <div role="main" class="content-area">
+        <div class="favorites-container">
+            <h1>Favorite TV Channels</h1>
+
+            <div class="filter-pills-container">
+                <button class="pill-btn active">All</button>
+                <button class="pill-btn">Subscribed</button>
+                <button class="pill-btn">Entertainment</button>
+                <button class="pill-btn">Sports</button>
+                <button class="pill-btn">News</button>
+                <button class="pill-btn">Kids</button>
+                <button class="pill-btn dropdown">Language <i class="fas fa-chevron-down"></i></button>
+            </div>
+
+            <div class="favorites-grid" id="favorites-grid">
+                <!-- Favorites will be dynamically inserted here by script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Menu (Copied from homepage) -->
+    <div id="sidebar-menu" class="sidebar-menu">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu-header">
+                <div class="logo">BBNL</div>
+                <button class="close-sidebar" id="close-sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-menu-nav">
+                <a href="homepage.html" class="sidebar-menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="tv-channels.html" class="sidebar-menu-item">
+                    <i class="fas fa-tv"></i>
+                    <span>Live Channels</span>
+                </a>
+                <a href="#" class="sidebar-menu-item">
+                    <i class="fas fa-film"></i>
+                    <span>Movies</span>
+                </a>
+                <a href="apps.html" class="sidebar-menu-item">
+                    <i class="fas fa-th"></i>
+                    <span>Apps</span>
+                </a>
+                <a href="subscriptions.html" class="sidebar-menu-item">
+                    <i class="fas fa-gem"></i>
+                    <span>Subscription</span>
+                </a>
+                <a href="favorites.html" class="sidebar-menu-item active">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorites</span>
+                </a>
+                <a href="notifications.html" class="sidebar-menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notification</span>
+                </a>
+                <a href="give-feedback.html" class="sidebar-menu-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Give Feedback</span>
+                </a>
+                <a href="help-desk.html" class="sidebar-menu-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Help Desk</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-menu-footer">
+                <a href="profiles.html" class="sidebar-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Copy basic sidebar/header JS logic (ES5 Compatible)
+        var sidebarToggle = document.getElementById('sidebar-toggle');
+        var sidebarMenu = document.getElementById('sidebar-menu');
+        var closeSidebar = document.getElementById('close-sidebar');
+        var sidebarOverlay = document.getElementById('sidebar-overlay');
+
+        function openSidebar() {
+            sidebarMenu.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebarMenu() {
+            sidebarMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
+        if (closeSidebar) closeSidebar.addEventListener('click', closeSidebarMenu);
+        if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebarMenu);
+
+        // Filter Pills Interaction
+        var pillBtns = document.querySelectorAll('.pill-btn');
+        for (var pb = 0; pb < pillBtns.length; pb++) {
+            pillBtns[pb].addEventListener('click', function (e) {
+                if (!e.target.classList.contains('dropdown')) {
+                    for (var pbi = 0; pbi < pillBtns.length; pbi++) {
+                        pillBtns[pbi].classList.remove('active');
+                    }
+                    e.target.classList.add('active');
+                }
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Load favorites from localStorage
+            loadFavorites();
+
+            // Initialize remote control
+            RemoteControl.init({
+                focusableSelector: '.favorite-card, .channel-card, .pill-btn, button, a, input',
+                wrapNavigation: true,
+                autoFocus: false,
+                debug: false
+            });
+        });
+    </script>
+</body>
+
+</html>

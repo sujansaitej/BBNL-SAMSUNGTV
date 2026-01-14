@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Give Feedback</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/forms.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <style>
+        .feedback-container {
+            padding: 100px 60px 60px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feedback-header {
+            margin-bottom: 40px;
+        }
+
+        .feedback-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .feedback-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .feedback-form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 8px;
+            font-size: 32px;
+        }
+
+        .star-rating i {
+            cursor: pointer;
+            color: var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .star-rating i:hover,
+        .star-rating i.active {
+            color: #ffc107;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        .success-message {
+            display: none;
+            padding: 16px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            color: #86efac;
+            margin-bottom: 24px;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .success-message i {
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">BBNL</div>
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search for movies, TV shows...">
+        </div>
+        <div class="header-right">
+            <div class="dark-mode-toggle">
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle-checkbox" class="theme-toggle-input" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button class="header-pill-btn" id="network-btn"><i class="fas fa-wifi"></i> Network</button>
+            <button class="header-icon-btn" onclick="window.location.href='settings.html'"><i
+                    class="fas fa-cog"></i></button>
+            <div class="profile-menu" id="profile-menu-container">
+                <img src="https://i.pravatar.cc/150?u=alex" alt="User" id="current-profile-avatar">
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu" class="sidebar-menu">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu-header">
+                <div class="logo">BBNL</div>
+                <button class="close-sidebar" id="close-sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-menu-nav">
+                <a href="homepage.html" class="sidebar-menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="tv-channels.html" class="sidebar-menu-item">
+                    <i class="fas fa-tv"></i>
+                    <span>Live Channels</span>
+                </a>
+                <a href="movies.html" class="sidebar-menu-item">
+                    <i class="fas fa-film"></i>
+                    <span>Movies</span>
+                </a>
+                <a href="shows.html" class="sidebar-menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Shows</span>
+                </a>
+                <a href="apps.html" class="sidebar-menu-item">
+                    <i class="fas fa-th"></i>
+                    <span>Apps</span>
+                </a>
+                <a href="subscriptions.html" class="sidebar-menu-item">
+                    <i class="fas fa-gem"></i>
+                    <span>Subscription</span>
+                </a>
+                <a href="favorites.html" class="sidebar-menu-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorites</span>
+                </a>
+                <a href="notifications.html" class="sidebar-menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notification</span>
+                </a>
+                <a href="give-feedback.html" class="sidebar-menu-item active">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Give Feedback</span>
+                </a>
+                <a href="help-desk.html" class="sidebar-menu-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Help Desk</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-menu-footer">
+                <a href="profiles.html" class="sidebar-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div role="main" class="feedback-container">
+        <div class="feedback-header">
+            <h1>Give Feedback</h1>
+            <p>We value your opinion! Share your experience with BBNL streaming services and help us improve.</p>
+        </div>
+
+        <div class="feedback-form-card">
+            <div class="feedback-info"
+                style="background: rgba(34, 197, 94, 0.05); border: 1px solid rgba(34, 197, 94, 0.2); border-radius: 8px; padding: 20px; margin-bottom: 28px;">
+                <h3
+                    style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-lightbulb" style="color: #86efac;"></i>
+                    Help us serve you better
+                </h3>
+                <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px;">
+                    Your feedback helps us understand what you love and what we can improve. Whether it's about
+                    streaming quality, content variety, user interface, or customer support – we want to hear from you!
+                </p>
+                <div style="display: grid; gap: 8px; margin-top: 16px;">
+                    <div
+                        style="display: flex; align-items: start; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+                        <i class="fas fa-star" style="color: #ffc107; margin-top: 2px;"></i>
+                        <span><strong>Rating:</strong> Select 1-5 stars based on your overall experience</span>
+                    </div>
+                    <div
+                        style="display: flex; align-items: start; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+                        <i class="fas fa-comment-dots" style="color: #86efac; margin-top: 2px;"></i>
+                        <span><strong>Detailed feedback:</strong> Share specific details about your experience</span>
+                    </div>
+                    <div
+                        style="display: flex; align-items: start; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+                        <i class="fas fa-shield-alt" style="color: #60a5fa; margin-top: 2px;"></i>
+                        <span><strong>Privacy:</strong> Your feedback is confidential and helps improve our
+                            service</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <strong>Thank you for your feedback!</strong>
+                    <p>Your feedback has been submitted successfully.</p>
+                </div>
+            </div>
+
+            <form id="feedback-form">
+                <div class="form-group">
+                    <label for="user-id">User ID</label>
+                    <input type="text" id="user-id" name="user-id" placeholder="Enter your User ID" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Rate Your Experience</label>
+                    <div class="star-rating" id="star-rating">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <input type="hidden" id="rating-value" name="rating" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="feedback">Your Feedback</label>
+                    <textarea id="feedback" name="feedback" placeholder="Tell us about your experience..."
+                        required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Star rating functionality
+        var stars = document.querySelectorAll('.star-rating i');
+        var ratingValue = document.getElementById('rating-value');
+        var selectedRating = 0;
+
+        stars.forEach(function (star) {
+            star.addEventListener('click', function () {
+                selectedRating = parseInt(this.getAttribute('data-rating'));
+                ratingValue.value = selectedRating;
+                updateStars();
+            });
+
+            star.addEventListener('mouseenter', function () {
+                var hoverRating = parseInt(this.getAttribute('data-rating'));
+                highlightStars(hoverRating);
+            });
+        });
+
+        document.getElementById('star-rating').addEventListener('mouseleave', function () {
+            updateStars();
+        });
+
+        function highlightStars(rating) {
+            stars.forEach(function (star, index) {
+                if (index < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas', 'active');
+                } else {
+                    star.classList.remove('fas', 'active');
+                    star.classList.add('far');
+                }
+            });
+        }
+
+        function updateStars() {
+            highlightStars(selectedRating);
+        }
+
+        // Form submission
+        var form = document.getElementById('feedback-form');
+        var successMessage = document.getElementById('success-message');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (!ratingValue.value) {
+                alert('Please select a rating');
+                return;
+            }
+
+            // Show success message
+            successMessage.classList.add('show');
+            form.reset();
+            selectedRating = 0;
+            updateStars();
+
+            // Hide success message after 5 seconds
+            setTimeout(function () {
+                successMessage.classList.remove('show');
+            }, 5000);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.star-rating i, button, a, input, select, textarea',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

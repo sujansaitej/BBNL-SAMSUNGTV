@@ -1,0 +1,278 @@
+/* ========================================================
+   REMOTE CONTROL FOCUS STYLES - Samsung Tizen TV
+   ======================================================== */
+
+/* -------------------- BASE FOCUS STYLES -------------------- */
+
+/* Global focus outline for all focusable elements */
+.remote-focused {
+    outline: 0.1875rem solid #3b82f6 !important;
+    outline-offset: 0.125rem !important;
+    -webkit-box-shadow: 0 0 0.9375rem rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 0.9375rem rgba(59, 130, 246, 0.5) !important;
+    -webkit-transition: all 0.2s ease !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Remove default focus styles */
+*:focus {
+    outline: none;
+}
+
+/* -------------------- BUTTON FOCUS STYLES -------------------- */
+
+button.remote-focused,
+.btn.remote-focused,
+.btn-primary.remote-focused,
+.btn-secondary.remote-focused {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.btn-outline.remote-focused {
+    background-color: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+/* -------------------- INPUT FOCUS STYLES -------------------- */
+
+input.remote-focused,
+textarea.remote-focused,
+select.remote-focused {
+    border-color: #3b82f6 !important;
+    -webkit-box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* OTP Input Focus */
+.otp-input.remote-focused {
+    border-color: #3b82f6 !important;
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+/* Phone Input Focus */
+.phone-input-wrapper.remote-focused .phone-input,
+.phone-input.remote-focused {
+    border-color: #3b82f6 !important;
+    -webkit-box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* -------------------- CARD FOCUS STYLES -------------------- */
+
+/* Media Cards */
+.media-item.remote-focused,
+.card.remote-focused,
+.movie-card.remote-focused,
+.show-card.remote-focused {
+    -webkit-transform: scale(1.08);
+    transform: scale(1.08);
+    -webkit-box-shadow: 0 0.5rem 1.5625rem rgba(59, 130, 246, 0.4) !important;
+    box-shadow: 0 0.5rem 1.5625rem rgba(59, 130, 246, 0.4) !important;
+    z-index: 10;
+}
+
+/* Channel Cards */
+.channel-card.remote-focused {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    border-color: #3b82f6 !important;
+    -webkit-box-shadow: 0 0.3125rem 1.25rem rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0.3125rem 1.25rem rgba(59, 130, 246, 0.5) !important;
+}
+
+/* App Tiles */
+.app-tile.remote-focused,
+.ott-app-card.remote-focused {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    border: 0.1875rem solid #3b82f6 !important;
+    -webkit-box-shadow: 0 0 1.25rem rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 0 1.25rem rgba(59, 130, 246, 0.6) !important;
+}
+
+/* -------------------- NAVIGATION FOCUS STYLES -------------------- */
+
+/* Sidebar Menu Items */
+.sidebar-menu-item.remote-focused,
+.nav-item.remote-focused {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+    border-left: 4px solid #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+/* Link Focus */
+a.remote-focused {
+    color: #3b82f6 !important;
+    text-decoration: underline;
+}
+
+/* -------------------- HERO SECTION FOCUS -------------------- */
+
+.hero-play-btn.remote-focused,
+.hero-info-btn.remote-focused {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    -webkit-box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* -------------------- PROFILE FOCUS STYLES -------------------- */
+
+.profile-card.remote-focused,
+.profile-item.remote-focused {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+    border: 3px solid #3b82f6 !important;
+}
+
+.profile-avatar.remote-focused {
+    border-color: #3b82f6 !important;
+    -webkit-box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.6) !important;
+}
+
+/* -------------------- SETTINGS FOCUS STYLES -------------------- */
+
+.settings-option.remote-focused,
+.setting-item.remote-focused {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-left: 4px solid #3b82f6 !important;
+}
+
+/* Toggle Switch Focus */
+.toggle-switch.remote-focused,
+.switch.remote-focused {
+    -webkit-box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* -------------------- PLAYER CONTROLS FOCUS -------------------- */
+
+.player-control.remote-focused,
+.control-btn.remote-focused {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    color: #3b82f6 !important;
+}
+
+.progress-bar.remote-focused {
+    height: 8px !important;
+    -webkit-box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5) !important;
+}
+
+/* Volume Slider Focus */
+.volume-slider.remote-focused {
+    -webkit-transform: scaleY(1.5);
+    transform: scaleY(1.5);
+}
+
+/* -------------------- MODAL/POPUP FOCUS STYLES -------------------- */
+
+.modal-btn.remote-focused,
+.popup-btn.remote-focused {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+}
+
+.close-btn.remote-focused,
+.close-modal.remote-focused {
+    -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+    color: #3b82f6 !important;
+}
+
+/* -------------------- NOTIFICATION FOCUS STYLES -------------------- */
+
+.notification-item.remote-focused {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    border-left: 4px solid #3b82f6 !important;
+}
+
+/* -------------------- TAB FOCUS STYLES -------------------- */
+
+.tab.remote-focused,
+.tab-btn.remote-focused {
+    border-bottom: 3px solid #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+/* -------------------- SUBSCRIPTION CARD FOCUS -------------------- */
+
+.subscription-card.remote-focused,
+.plan-card.remote-focused {
+    -webkit-transform: scale(1.03);
+    transform: scale(1.03);
+    border: 3px solid #3b82f6 !important;
+    -webkit-box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* -------------------- ACCESSIBILITY ENHANCEMENTS -------------------- */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .remote-focused {
+        outline-width: 4px !important;
+        outline-color: #ffffff !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .remote-focused {
+        -webkit-transition: none !important;
+        transition: none !important;
+    }
+    
+    .remote-focused {
+        -webkit-transform: none !important;
+        transform: none !important;
+    }
+}
+
+/* -------------------- ANIMATION -------------------- */
+
+/* Focus pulse animation */
+@-webkit-keyframes focusPulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+@keyframes focusPulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    }
+    70% {
+        -webkit-box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+        box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+    }
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+        box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    }
+}
+
+/* Initial focus animation */
+.remote-focused-animate {
+    -webkit-animation: focusPulse 1s ease-out;
+    animation: focusPulse 1s ease-out;
+}

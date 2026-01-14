@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Help Desk</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/forms.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <style>
+        .helpdesk-container {
+            padding: 100px 60px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .helpdesk-header {
+            margin-bottom: 40px;
+        }
+
+        .helpdesk-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .helpdesk-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .helpdesk-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .helpdesk-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 40px;
+        }
+
+        .helpdesk-card h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        .success-message {
+            display: none;
+            padding: 16px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 8px;
+            color: #86efac;
+            margin-bottom: 24px;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .success-message i {
+            font-size: 24px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .activity-item {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            border-color: #ffc107;
+        }
+
+        .activity-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.resolved {
+            background: rgba(34, 197, 94, 0.1);
+            color: #86efac;
+        }
+
+        .activity-icon.pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .activity-icon.closed {
+            background: rgba(220, 38, 38, 0.1);
+            color: #fca5a5;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-details h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .activity-details p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .activity-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .status-badge.resolved {
+            background: rgba(34, 197, 94, 0.1);
+            color: #86efac;
+        }
+
+        .status-badge.pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+        }
+
+        .status-badge.closed {
+            background: rgba(220, 38, 38, 0.1);
+            color: #fca5a5;
+        }
+
+        @media (max-width: 968px) {
+            .helpdesk-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">BBNL</div>
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Search for movies, TV shows...">
+        </div>
+        <div class="header-right">
+            <div class="dark-mode-toggle">
+                <span>Dark Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="theme-toggle-checkbox" class="theme-toggle-input" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <button class="header-pill-btn" id="network-btn"><i class="fas fa-wifi"></i> Network</button>
+            <button class="header-icon-btn" onclick="window.location.href='settings.html'"><i
+                    class="fas fa-cog"></i></button>
+            <div class="profile-menu" id="profile-menu-container">
+                <img src="https://i.pravatar.cc/150?u=alex" alt="User" id="current-profile-avatar">
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar-menu" class="sidebar-menu">
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-content">
+            <div class="sidebar-menu-header">
+                <div class="logo">BBNL</div>
+                <button class="close-sidebar" id="close-sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-menu-nav">
+                <a href="homepage.html" class="sidebar-menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="tv-channels.html" class="sidebar-menu-item">
+                    <i class="fas fa-tv"></i>
+                    <span>Live Channels</span>
+                </a>
+                <a href="movies.html" class="sidebar-menu-item">
+                    <i class="fas fa-film"></i>
+                    <span>Movies</span>
+                </a>
+                <a href="shows.html" class="sidebar-menu-item">
+                    <i class="fas fa-video"></i>
+                    <span>Shows</span>
+                </a>
+                <a href="apps.html" class="sidebar-menu-item">
+                    <i class="fas fa-th"></i>
+                    <span>Apps</span>
+                </a>
+                <a href="subscriptions.html" class="sidebar-menu-item">
+                    <i class="fas fa-gem"></i>
+                    <span>Subscription</span>
+                </a>
+                <a href="favorites.html" class="sidebar-menu-item">
+                    <i class="fas fa-heart"></i>
+                    <span>Favorites</span>
+                </a>
+                <a href="notifications.html" class="sidebar-menu-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notification</span>
+                </a>
+                <a href="give-feedback.html" class="sidebar-menu-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Give Feedback</span>
+                </a>
+                <a href="help-desk.html" class="sidebar-menu-item active">
+                    <i class="fas fa-headset"></i>
+                    <span>Help Desk</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-menu-footer">
+                <a href="profiles.html" class="sidebar-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div role="main" class="helpdesk-container">
+        <div class="helpdesk-header">
+            <h1>Help Desk</h1>
+            <p>Need assistance? Raise a complaint or check your recent activity. We're here to help you resolve any
+                issues quickly.</p>
+        </div>
+
+        <div class="helpdesk-grid">
+            <!-- Raise Complaint Form -->
+            <div class="helpdesk-card">
+                <h2>Raise a Complaint</h2>
+
+                <div class="help-instructions"
+                    style="background: rgba(255, 193, 7, 0.05); border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                    <h4
+                        style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-info-circle" style="color: #ffc107;"></i>
+                        How to raise a complaint
+                    </h4>
+                    <ul style="list-style: none; padding: 0; margin: 0; font-size: 13px; color: var(--text-secondary);">
+                        <li style="padding: 4px 0; padding-left: 20px; position: relative;">
+                            <span style="position: absolute; left: 0;">1.</span>
+                            Enter your registered User ID
+                        </li>
+                        <li style="padding: 4px 0; padding-left: 20px; position: relative;">
+                            <span style="position: absolute; left: 0;">2.</span>
+                            Provide your contact mobile number
+                        </li>
+                        <li style="padding: 4px 0; padding-left: 20px; position: relative;">
+                            <span style="position: absolute; left: 0;">3.</span>
+                            Describe your issue in detail
+                        </li>
+                        <li style="padding: 4px 0; padding-left: 20px; position: relative;">
+                            <span style="position: absolute; left: 0;">4.</span>
+                            Submit and track your complaint status below
+                        </li>
+                    </ul>
+                    <p style="margin-top: 12px; font-size: 12px; color: var(--text-secondary); font-style: italic;">
+                        <i class="fas fa-clock" style="color: #ffc107;"></i> Expected response time: 24-48 hours
+                    </p>
+                </div>
+
+                <div class="success-message" id="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Complaint submitted successfully!</strong>
+                        <p>Your complaint ID: <span id="complaint-id"></span></p>
+                    </div>
+                </div>
+
+                <form id="complaint-form">
+                    <div class="form-group">
+                        <label for="user-id">User ID</label>
+                        <input type="text" id="user-id" name="user-id" placeholder="Enter your User ID" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" name="mobile" placeholder="Enter your mobile number"
+                            pattern="[0-9]{10}" maxlength="10" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issue">Issue Description</label>
+                        <textarea id="issue" name="issue" placeholder="Describe your issue in detail..."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary"
+                            onclick="document.getElementById('complaint-form').reset()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Complaint</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="helpdesk-card">
+                <h2>Recent Activity</h2>
+
+                <div class="activity-list" id="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon resolved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Video playback issue</h4>
+                            <p>Unable to stream content on Prime Video</p>
+                            <div class="activity-meta">
+                                <span><i class="far fa-calendar"></i> Dec 15, 2025</span>
+                                <span><i class="far fa-clock"></i> 2:30 PM</span>
+                            </div>
+                        </div>
+                        <span class="status-badge resolved">Resolved</span>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Subscription not activated</h4>
+                            <p>Payment completed but subscription not showing</p>
+                            <div class="activity-meta">
+                                <span><i class="far fa-calendar"></i> Dec 18, 2025</span>
+                                <span><i class="far fa-clock"></i> 10:15 AM</span>
+                            </div>
+                        </div>
+                        <span class="status-badge pending">Pending</span>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon closed">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Audio sync problem</h4>
+                            <p>Audio and video out of sync on certain channels</p>
+                            <div class="activity-meta">
+                                <span><i class="far fa-calendar"></i> Dec 12, 2025</span>
+                                <span><i class="far fa-clock"></i> 5:45 PM</span>
+                            </div>
+                        </div>
+                        <span class="status-badge closed">Closed</span>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon resolved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <h4>Network connectivity issue</h4>
+                            <p>Frequent disconnections during streaming</p>
+                            <div class="activity-meta">
+                                <span><i class="far fa-calendar"></i> Dec 10, 2025</span>
+                                <span><i class="far fa-clock"></i> 8:20 AM</span>
+                            </div>
+                        </div>
+                        <span class="status-badge resolved">Resolved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Form submission
+        var form = document.getElementById('complaint-form');
+        var successMessage = document.getElementById('success-message');
+        var complaintIdSpan = document.getElementById('complaint-id');
+        var activityList = document.getElementById('activity-list');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Generate complaint ID
+            var complaintId = 'CMP' + Date.now().toString().slice(-8);
+            complaintIdSpan.textContent = complaintId;
+
+            // Get form values
+            var userId = document.getElementById('user-id').value;
+            var issue = document.getElementById('issue').value;
+
+            // Show success message
+            successMessage.classList.add('show');
+
+            // Add new complaint to activity list
+            var newActivity = document.createElement('div');
+            newActivity.className = 'activity-item';
+            var issueText = issue.substring(0, 50) + (issue.length > 50 ? '...' : '');
+            var dateStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            var timeStr = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+            newActivity.innerHTML = '<div class="activity-icon pending">' +
+                '<i class="fas fa-clock"></i>' +
+                '</div>' +
+                '<div class="activity-details">' +
+                '<h4>' + issueText + '</h4>' +
+                '<p>User ID: ' + userId + '</p>' +
+                '<div class="activity-meta">' +
+                '<span><i class="far fa-calendar"></i> ' + dateStr + '</span>' +
+                '<span><i class="far fa-clock"></i> ' + timeStr + '</span>' +
+                '</div>' +
+                '</div>' +
+                '<span class="status-badge pending">Pending</span>';
+            activityList.insertBefore(newActivity, activityList.firstChild);
+
+            // Reset form
+            form.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(function () {
+                successMessage.classList.remove('show');
+            }, 5000);
+
+            // Scroll to activity section
+            setTimeout(function () {
+                newActivity.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.faq-item, .activity-item, button, a, input, select, textarea',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

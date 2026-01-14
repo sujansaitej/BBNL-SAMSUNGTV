@@ -1,0 +1,15 @@
+{
+    "json.validate.enable": true,
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    "search.exclude": {
+        "**/node_modules": true
+    },
+    "json.schemas": [],
+    "files.associations": {
+        "*.json": "json"
+    },
+    "typescript.validate.enable": false,
+    "javascript.validate.enable": false
+}

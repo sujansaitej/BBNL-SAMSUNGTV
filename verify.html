@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Verify OTP</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/auth.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <!-- API Files -->
+    <script src="api/config.js"></script>
+    <script src="api/auth.js"></script>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-content">
+                <h2 class="auth-title">Enter Verification Code</h2>
+                <p class="auth-subtitle" id="otp-message">We've sent a 4-digit code to your registered contact</p>
+
+                <!-- Step Indicator -->
+                <div class="step-indicator">
+                    <div class="step completed">
+                        <span class="step-dot"></span>
+                        <span class="step-label">Phone</span>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step active">
+                        <span class="step-dot"></span>
+                        <span class="step-label">Verify</span>
+                    </div>
+                </div>
+
+                <form class="auth-form" id="otp-form" onsubmit="return false;">
+                    <div class="otp-input-group" role="group" aria-label="Enter 4-digit OTP code">
+                        <input name="otp1" id="otp-digit-1" type="text" class="otp-input" maxlength="1"
+                            autocomplete="off" aria-label="First digit of OTP">
+                        <input name="otp2" id="otp-digit-2" type="text" class="otp-input" maxlength="1"
+                            autocomplete="off" aria-label="Second digit of OTP">
+                        <input name="otp3" id="otp-digit-3" type="text" class="otp-input" maxlength="1"
+                            autocomplete="off" aria-label="Third digit of OTP">
+                        <input name="otp4" id="otp-digit-4" type="text" class="otp-input" maxlength="1"
+                            autocomplete="off" aria-label="Fourth digit of OTP">
+                    </div>
+                    <div id="error-message" class="error-message"></div>
+                    <div id="success-message" class="success-message"></div>
+                    <p class="otp-timer">Didn't receive the code? <a href="#" id="resend-link">Resend OTP</a></p>
+                    <div id="loading-spinner" class="loading-spinner">
+                        <span>Verifying...</span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var otpInputs = document.querySelectorAll('.otp-input');
+        var form = document.querySelector('.auth-form');
+
+        // Show error message
+        function showError(message) {
+            var errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('success-message').style.display = 'none';
+            setTimeout(function () {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            var successDiv = document.getElementById('success-message');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            document.getElementById('error-message').style.display = 'none';
+            // Don't auto-hide - keep OTP visible permanently
+        }
+
+        // Update OTP message with user contact
+        window.addEventListener('load', function () {
+            var mobile = sessionStorage.getItem('bbnl_mobile');
+
+            if (!mobile) {
+                showError('Session expired. Please login again.');
+                setTimeout(function () {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            var maskedMobile = mobile.substring(0, 2) + 'XXXXXX' + mobile.substring(8);
+            document.getElementById('otp-message').textContent =
+                'We have sent a 4-digit code to +91 ' + maskedMobile;
+
+            // Show OTP if available from session
+            var otp = sessionStorage.getItem('bbnl_otp');
+            if (otp) {
+                showSuccess('OTP Code: ' + otp);
+                // Clear it after showing
+                sessionStorage.removeItem('bbnl_otp');
+            }
+
+            // Initialize remote control
+            RemoteControl.init({
+                focusableSelector: '.otp-input, a, .resend-link',
+                wrapNavigation: false,
+                autoFocus: false,
+                debug: false
+            });
+        });
+
+        // Handle OTP input
+        for (var i = 0; i < otpInputs.length; i++) {
+            (function (index) {
+                var input = otpInputs[index];
+                input.addEventListener('input', function (e) {
+                    // Only allow numbers
+                    input.value = input.value.replace(/[^0-9]/g, '');
+
+                    if (input.value) {
+                        if (index < otpInputs.length - 1) {
+                            otpInputs[index + 1].focus();
+                            RemoteControl.setFocus(otpInputs[index + 1]);
+                        } else {
+                            // All 4 digits entered, verify OTP
+                            verifyOTP();
+                        }
+                    }
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    // Handle backspace
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                        RemoteControl.setFocus(otpInputs[index - 1]);
+                    }
+
+                    // Prevent default for number keys - let remote.js handle it
+                    if (e.keyCode >= 48 && e.keyCode <= 57) {
+                        e.preventDefault();
+                    }
+                });
+            })(i);
+        }
+
+        // Verify OTP via API
+        function verifyOTP() {
+            var enteredOTP = '';
+            for (var i = 0; i < otpInputs.length; i++) {
+                enteredOTP += otpInputs[i].value;
+            }
+
+            if (enteredOTP.length !== 4) {
+                showError('Please enter complete OTP');
+                return;
+            }
+
+            var mobile = sessionStorage.getItem('bbnl_mobile');
+            var userid = API_CONFIG.USER_CREDENTIALS.userid;
+            var spinner = document.getElementById('loading-spinner');
+
+            console.log('🔐 Verifying OTP - Entered:', enteredOTP);
+
+            spinner.style.display = 'block';
+
+            // Call AuthAPI to verify OTP (server validates the OTP)
+            AuthAPI.verifyOTP(userid, mobile, enteredOTP)
+                .then(function (result) {
+                    spinner.style.display = 'none';
+                    console.log('📋 Verification result:', result);
+
+                    if (result.success) {
+                        // OTP verified successfully
+                        showSuccess('Login successful! Redirecting...');
+
+                        // Clear session storage
+                        sessionStorage.removeItem('bbnl_mobile');
+
+                        // Redirect to homepage
+                        setTimeout(function () {
+                            window.location.href = 'homepage.html';
+                        }, 1500);
+                    } else {
+                        // OTP verification failed
+                        showError(result.message || 'Invalid OTP. Please try again.');
+                        console.log('❌ OTP verification failed:', result.message);
+
+                        // Clear inputs
+                        for (var i = 0; i < otpInputs.length; i++) {
+                            otpInputs[i].value = '';
+                        }
+                        otpInputs[0].focus();
+                        RemoteControl.setFocus(otpInputs[0]);
+                    }
+                }, function (error) {
+                    spinner.style.display = 'none';
+                    showError('Verification failed. Please try again.');
+                    console.error('OTP verification error:', error);
+
+                    // Clear inputs
+                    for (var i = 0; i < otpInputs.length; i++) {
+                        otpInputs[i].value = '';
+                    }
+                    otpInputs[0].focus();
+                    RemoteControl.setFocus(otpInputs[0]);
+                });
+        }
+
+        // Resend OTP
+        document.getElementById('resend-link').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            var mobile = sessionStorage.getItem('bbnl_mobile');
+            var userid = API_CONFIG.USER_CREDENTIALS.userid;
+
+            if (!mobile) {
+                showError('Session expired. Please login again.');
+                setTimeout(function () {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+
+            var spinner = document.getElementById('loading-spinner');
+            spinner.style.display = 'block';
+
+            // Call AuthAPI to request OTP again
+            AuthAPI.requestOTP(userid, mobile)
+                .then(function (result) {
+                    spinner.style.display = 'none';
+
+                    if (result.success) {
+                        var message = 'OTP sent successfully!';
+                        // Show OTP in message if available (for testing)
+                        if (result.otp) {
+                            message += ' Code: ' + result.otp;
+                        }
+                        showSuccess(message);
+                        // Clear inputs
+                        for (var i = 0; i < otpInputs.length; i++) {
+                            otpInputs[i].value = '';
+                        }
+                        otpInputs[0].focus();
+                        RemoteControl.setFocus(otpInputs[0]);
+                    } else {
+                        showError(result.message);
+                    }
+                }, function (error) {
+                    spinner.style.display = 'none';
+                    showError('An unexpected error occurred. Please try again.');
+                    console.error('Resend OTP error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>

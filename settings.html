@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Settings</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/forms.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/settings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+
+<body class="dark-mode">
+    <div class="settings-page-container">
+        <!-- Settings Top Header -->
+        <header class="settings-top-header">
+            <div class="settings-header-left">
+                <div class="settings-logo">BBNL</div>
+            </div>
+            <div class="settings-header-center">
+                <div class="settings-search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search Channels">
+                </div>
+            </div>
+            <div class="settings-header-right">
+                <button class="settings-icon-btn" onclick="window.location.href='homepage.html'">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button class="settings-icon-btn" onclick="window.location.href='notifications.html'">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <div class="settings-profile-avatar">
+                    <img src="https://i.pravatar.cc/150?u=alex" alt="User">
+                </div>
+            </div>
+        </header>
+
+        <div class="settings-layout">
+            <!-- Sidebar -->
+            <aside class="settings-sidebar">
+                <nav class="settings-nav">
+                    <a href="#" class="settings-nav-item active" data-target="parental">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Parental Controls</span>
+                    </a>
+                    <a href="#" class="settings-nav-item" data-target="reset">
+                        <i class="fas fa-redo-alt"></i>
+                        <span>Reset App</span>
+                    </a>
+                    <a href="#" class="settings-nav-item" data-target="display">
+                        <i class="fas fa-tv"></i>
+                        <span>Display</span>
+                    </a>
+
+                    <a href="#" class="settings-nav-item" data-target="about">
+                        <i class="fas fa-info-circle"></i>
+                        <span>About App</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Main Content -->
+            <div role="main" class="settings-main-content">
+                <!-- Parental Controls Section -->
+                <section id="parental" class="settings-section active">
+                    <div class="pc-content-panel">
+                        <h2>Parental Controls</h2>
+                        <p class="settings-subtitle">Manage content restriction and PIN settings for your device</p>
+
+                        <div class="pc-settings-cards">
+                            <!-- Enable Parental Controls Card -->
+                            <div class="pc-card">
+                                <div class="pc-card-content">
+                                    <div class="pc-card-info">
+                                        <h3 class="pc-card-title">Enable Parental Controls</h3>
+                                    </div>
+                                    <div class="pc-card-control">
+                                        <label class="pc-toggle-switch">
+                                            <input type="checkbox" id="enableParental" checked>
+                                            <span class="pc-toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Set PIN Card -->
+                            <div class="pc-card">
+                                <div class="pc-card-content">
+                                    <div class="pc-card-info">
+                                        <h3 class="pc-card-title">Set PIN</h3>
+                                        <p class="pc-card-description">A PIN required to change settings and bypass
+                                            restrictions.</p>
+                                    </div>
+                                    <div class="pc-card-control">
+                                        <button class="pc-action-btn">Change</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Content Rating Card -->
+                            <div class="pc-card">
+                                <div class="pc-card-content">
+                                    <div class="pc-card-info">
+                                        <h3 class="pc-card-title">Content Rating</h3>
+                                        <p class="pc-card-description">Restrict Movies and TV shows on their rating</p>
+                                    </div>
+                                    <div class="pc-card-control">
+                                        <button class="pc-action-btn">Set Rating</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- App Restriction Card -->
+                            <div class="pc-card">
+                                <div class="pc-card-content">
+                                    <div class="pc-card-info">
+                                        <h3 class="pc-card-title">App Restriction</h3>
+                                        <p class="pc-card-description">Block access to specific app</p>
+                                    </div>
+                                    <div class="pc-card-control">
+                                        <button class="pc-action-btn">Manage</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reset App Section -->
+                <section id="reset" class="settings-section">
+                    <h2>Reset App</h2>
+                    <p class="settings-subtitle">Reset application data and settings</p>
+
+                    <div class="pc-settings-cards">
+                        <!-- Clear Cache -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Clear Cache</h3>
+                                    <p class="pc-card-description">Remove temporary files to free up space</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reset Settings -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Reset Settings</h3>
+                                    <p class="pc-card-description">Restore all settings to default values</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn pc-danger-btn">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Factory Reset -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Factory Reset</h3>
+                                    <p class="pc-card-description">Erase all data and restore app to factory state</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn pc-danger-btn">Factory Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Display Section -->
+                <section id="display" class="settings-section">
+                    <h2>Display Settings</h2>
+                    <p class="settings-subtitle">Manage your display settings and its size</p>
+
+                    <div class="pc-settings-cards">
+                        <!-- Streaming Quality -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Streaming Quality</h3>
+                                    <p class="pc-card-description">Set the video quality for streaming</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <select class="pc-select-btn" id="streamingQuality">
+                                        <option value="auto" selected>Auto</option>
+                                        <option value="4k">4K Ultra HD</option>
+                                        <option value="1080p">1080p HD</option>
+                                        <option value="720p">720p</option>
+                                        <option value="480p">480p</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Auto Play Previews -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Auto Play Previews</h3>
+                                </div>
+                                <div class="pc-card-control">
+                                    <label class="pc-toggle-switch">
+                                        <input type="checkbox" id="autoPlayPreviews" checked>
+                                        <span class="pc-toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Display Size -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Display Size</h3>
+                                    <p class="pc-card-description">Adjust the screen area to fit your TV</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn">Adjust</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Aspect Ratio -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Aspect Ratio</h3>
+                                    <p class="pc-card-description">Match the display shape to your screen format</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <select class="pc-select-btn" id="aspectRatio">
+                                        <option value="auto" selected>Auto</option>
+                                        <option value="16:9">16:9</option>
+                                        <option value="4:3">4:3</option>
+                                        <option value="21:9">21:9</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- About App Section -->
+                <section id="about" class="settings-section">
+                    <h2>About App</h2>
+                    <p class="settings-subtitle">Learn information about our app</p>
+
+                    <div class="pc-settings-cards">
+                        <!-- App Information Card -->
+                        <div class="pc-card about-info-card">
+                            <h3 class="about-section-title">App Information</h3>
+                            <div class="about-info-row">
+                                <span class="about-label">Model Name</span>
+                                <span class="about-value">BBNL Launch 2K</span>
+                            </div>
+                            <div class="about-info-row">
+                                <span class="about-label">Software Version</span>
+                                <span class="about-value">v2.1.0 - Release</span>
+                            </div>
+                            <div class="about-info-row">
+                                <span class="about-label">Serial Number</span>
+                                <span class="about-value">SN-SH4K-1A2B5Y9G</span>
+                            </div>
+                        </div>
+
+                        <!-- Network Information Card -->
+                        <div class="pc-card about-info-card">
+                            <h3 class="about-section-title">Network Information</h3>
+                            <div class="about-info-row">
+                                <span class="about-label">IP Address</span>
+                                <span class="about-value" id="device-ip">192.168.1.100</span>
+                            </div>
+                            <div class="about-info-row">
+                                <span class="about-label">Mac Address</span>
+                                <span class="about-value" id="device-mac">01:1D-6N:6B-4A</span>
+                            </div>
+                        </div>
+
+                        <!-- Software Updates Card -->
+                        <div class="pc-card">
+                            <div class="pc-card-content">
+                                <div class="pc-card-info">
+                                    <h3 class="pc-card-title">Software Updates</h3>
+                                    <p class="pc-card-description">Your App software is up to date</p>
+                                </div>
+                                <div class="pc-card-control">
+                                    <button class="pc-action-btn">Check</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Settings Navigation Logic (ES5 Compatible)
+        var navItems = document.querySelectorAll('.settings-nav-item');
+        var sections = document.querySelectorAll('.settings-section');
+
+        function switchSection(targetId) {
+            // Update Nav
+            for (var i = 0; i < navItems.length; i++) {
+                navItems[i].classList.remove('active');
+                if (navItems[i].getAttribute('data-target') === targetId) {
+                    navItems[i].classList.add('active');
+                }
+            }
+
+            // Update Content
+            for (var j = 0; j < sections.length; j++) {
+                sections[j].classList.remove('active');
+                if (sections[j].id === targetId) {
+                    sections[j].classList.add('active');
+                }
+            }
+        }
+
+        for (var n = 0; n < navItems.length; n++) {
+            navItems[n].addEventListener('click', function (e) {
+                e.preventDefault();
+                var targetId = this.getAttribute('data-target');
+                switchSection(targetId);
+            });
+        }
+
+        // Handle Hash Navigation
+        window.addEventListener('load', function () {
+            var hash = window.location.hash.replace('#', '');
+            if (hash) {
+                switchSection(hash);
+            }
+        });
+
+        // TV Remote Navigation Support
+        var currentFocusIndex = 0;
+        var focusableElements = [];
+
+        function initRemoteNavigation() {
+            // Gather all focusable elements
+            var buttons = document.querySelectorAll('.pc-action-btn, .settings-nav-item, .settings-icon-btn');
+            var toggles = document.querySelectorAll('.pc-toggle-switch input');
+
+            focusableElements = [];
+            for (var b = 0; b < buttons.length; b++) {
+                focusableElements.push(buttons[b]);
+            }
+            for (var t = 0; t < toggles.length; t++) {
+                focusableElements.push(toggles[t]);
+            }
+
+            if (focusableElements.length > 0) {
+                currentFocusIndex = 0;
+                focusableElements[0].focus();
+            }
+        }
+
+        function moveFocus(direction) {
+            if (focusableElements.length === 0) return;
+
+            currentFocusIndex += direction;
+
+            if (currentFocusIndex < 0) {
+                currentFocusIndex = focusableElements.length - 1;
+            } else if (currentFocusIndex >= focusableElements.length) {
+                currentFocusIndex = 0;
+            }
+
+            focusableElements[currentFocusIndex].focus();
+        }
+
+        // Keyboard navigation for TV remote
+        document.addEventListener('keydown', function (e) {
+            switch (e.key) {
+                case 'ArrowDown':
+                    e.preventDefault();
+                    moveFocus(1);
+                    break;
+                case 'ArrowUp':
+                    e.preventDefault();
+                    moveFocus(-1);
+                    break;
+                case 'Enter':
+                    // Default behavior handles clicks
+                    break;
+            }
+        });
+
+        // Initialize on page load
+        window.addEventListener('load', function () {
+            initRemoteNavigation();
+        });
+
+        // Re-initialize when section changes
+        for (var r = 0; r < navItems.length; r++) {
+            navItems[r].addEventListener('click', function () {
+                setTimeout(initRemoteNavigation, 100);
+            });
+        }
+
+        // Toggle switch keyboard support
+        var toggleInputs = document.querySelectorAll('.pc-toggle-switch input');
+        for (var ti = 0; ti < toggleInputs.length; ti++) {
+            toggleInputs[ti].addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.checked = !this.checked;
+                }
+            });
+        }
+
+        // Initialize remote control
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.settings-nav-item, .settings-menu-item, button, input, select, a, .toggle-switch',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

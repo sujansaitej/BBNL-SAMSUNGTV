@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Who's Watching?</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/profile.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+<body>
+    <div class="profile-container">
+        <!-- Profile Selection View -->
+        <div id="view-profiles" class="profile-selection">
+            <h1>Who's Watching?</h1>
+            <div class="profiles-grid">
+                <div class="profile-card" onclick="window.location.href='homepage.html';">
+                    <div class="profile-avatar">
+                        <img src="https://i.pravatar.cc/150?u=alex" alt="Alex">
+                    </div>
+                    <p class="profile-name">Alex</p>
+                </div>
+                <div class="profile-card" onclick="window.location.href='homepage.html';">
+                    <div class="profile-avatar">
+                        <img src="https://i.pravatar.cc/150?u=catherine" alt="Catherine">
+                    </div>
+                    <p class="profile-name">Catherine</p>
+                </div>
+                <div class="profile-card" onclick="window.location.href='homepage.html';">
+                    <div class="profile-avatar">
+                        <img src="https://i.pravatar.cc/150?u=tom" alt="Tom">
+                    </div>
+                    <p class="profile-name">Tom</p>
+                </div>
+                <div id="add-profile-btn" class="profile-card add-profile">
+                    <div class="profile-avatar add">
+                        <span>+</span>
+                    </div>
+                    <p class="profile-name">Add Profile</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Profile View -->
+        <div id="view-add-profile" class="profile-add-edit" style="display: none;">
+            <button id="back-to-profiles" class="back-arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <h2>Add Profile</h2>
+            <p>Create a personalized profile for another member of your household</p>
+            
+            <div class="avatar-selection">
+                <button class="avatar-arrow prev">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <div class="avatar-options">
+                    <div class="avatar-option"><img src="https://i.pravatar.cc/150?u=new1" alt="Avatar 1"></div>
+                    <div class="avatar-option selected"><img src="https://i.pravatar.cc/150?u=new2" alt="Avatar 2"></div>
+                    <div class="avatar-option"><img src="https://i.pravatar.cc/150?u=new3" alt="Avatar 3"></div>
+                </div>
+                <button class="avatar-arrow next">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+            </div>
+            <p class="upload-link"><span></span>Upload Photo</p>
+
+            <form class="profile-form">
+                <div class="form-group">
+                    <label for="profile-name">Name</label>
+                    <input type="text" id="profile-name" placeholder="Enter Profile Name">
+                </div>
+                <div class="form-group kids-toggle">
+                    <div>
+                        <label>Kids Profile</label>
+                        <p>(Only show content rated for ages 12 and under)</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Profile</button>
+                    <button type="button" id="cancel-add-profile" class="btn btn-secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ES5 Compatible Profile Management
+        var viewProfiles = document.getElementById('view-profiles');
+        var viewAddProfile = document.getElementById('view-add-profile');
+        var addProfileBtn = document.getElementById('add-profile-btn');
+        var backToProfilesBtn = document.getElementById('back-to-profiles');
+        var cancelAddProfileBtn = document.getElementById('cancel-add-profile');
+        var profileForm = document.querySelector('.profile-form');
+        var profilesGrid = document.querySelector('.profiles-grid');
+        var addProfileCard = document.getElementById('add-profile-btn');
+        var profileNameInput = document.getElementById('profile-name');
+
+        // Avatar Carousel
+        var avatarOptionsContainer = document.querySelector('.avatar-options');
+        var prevAvatarBtn = document.querySelector('.avatar-arrow.prev');
+        var nextAvatarBtn = document.querySelector('.avatar-arrow.next');
+        var avatars = [
+            'https://i.pravatar.cc/150?u=new1',
+            'https://i.pravatar.cc/150?u=new2',
+            'https://i.pravatar.cc/150?u=new3',
+            'https://i.pravatar.cc/150?u=new4',
+            'https://i.pravatar.cc/150?u=new5',
+            'https://i.pravatar.cc/150?u=new6'
+        ];
+        var currentAvatarIndex = 1;
+
+        function updateAvatarSelection() {
+            avatarOptionsContainer.innerHTML = '';
+            var visibleAvatars = [];
+            for (var i = 0; i < 3; i++) {
+                var index = (currentAvatarIndex - 1 + i + avatars.length) % avatars.length;
+                visibleAvatars.push(avatars[index]);
+            }
+
+            for (var j = 0; j < visibleAvatars.length; j++) {
+                (function(idx) {
+                    var src = visibleAvatars[idx];
+                    var isSelected = idx === 1;
+                    var avatarOption = document.createElement('div');
+                    avatarOption.className = 'avatar-option' + (isSelected ? ' selected' : '');
+                    avatarOption.innerHTML = '<img src="' + src + '" alt="Avatar">';
+                    avatarOption.addEventListener('click', function() {
+                        currentAvatarIndex = (currentAvatarIndex + idx - 1 + avatars.length) % avatars.length;
+                        updateAvatarSelection();
+                    });
+                    avatarOptionsContainer.appendChild(avatarOption);
+                })(j);
+            }
+        }
+
+        prevAvatarBtn.addEventListener('click', function() {
+            currentAvatarIndex = (currentAvatarIndex - 1 + avatars.length) % avatars.length;
+            updateAvatarSelection();
+        });
+
+        nextAvatarBtn.addEventListener('click', function() {
+            currentAvatarIndex = (currentAvatarIndex + 1) % avatars.length;
+            updateAvatarSelection();
+        });
+
+        function resetAddProfileForm() {
+            profileNameInput.value = '';
+            document.querySelector('.kids-toggle input').checked = false;
+            currentAvatarIndex = 1;
+            updateAvatarSelection();
+        }
+
+        function showProfileView() {
+            viewProfiles.style.display = 'block';
+            viewAddProfile.style.display = 'none';
+            resetAddProfileForm();
+        }
+
+        addProfileBtn.addEventListener('click', function() {
+            viewProfiles.style.display = 'none';
+            viewAddProfile.style.display = 'block';
+            resetAddProfileForm();
+        });
+
+        backToProfilesBtn.addEventListener('click', showProfileView);
+        cancelAddProfileBtn.addEventListener('click', showProfileView);
+
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var profileName = profileNameInput.value.trim();
+            if (profileName) {
+                var selectedAvatarSrc = avatars[currentAvatarIndex];
+                
+                var newProfileCard = document.createElement('div');
+                newProfileCard.className = 'profile-card';
+                newProfileCard.innerHTML = '<div class="profile-avatar">' +
+                        '<img src="' + selectedAvatarSrc + '" alt="' + profileName + '">' +
+                    '</div>' +
+                    '<p class="profile-name">' + profileName + '</p>';
+                newProfileCard.addEventListener('click', function() {
+                    window.location.href = 'homepage.html';
+                });
+
+                profilesGrid.insertBefore(newProfileCard, addProfileCard);
+                showProfileView();
+            }
+        });
+
+        // Initial setup
+        updateAvatarSelection();
+        
+        // Initialize remote control
+        document.addEventListener('DOMContentLoaded', function() {
+            RemoteControl.init({
+                focusableSelector: '.profile-card, button, input, a',
+                wrapNavigation: true,
+                autoFocus: false,
+                debug: false
+            });
+        });
+    </script>
+</body>
+</html>

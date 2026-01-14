@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Select User</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/auth.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <style>
+        .user-selection-list {
+            margin: 20px 0;
+        }
+        .user-card {
+            background: #0d1117;
+            border: 2px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .user-card:hover {
+            border-color: #ffc107;
+            background: #161b22;
+        }
+        .user-card.prime {
+            border-color: #ffc107;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffc107;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .user-details h4 {
+            margin: 0;
+            color: #fff;
+            font-size: 16px;
+        }
+        .user-details p {
+            margin: 5px 0 0 0;
+            color: #888;
+            font-size: 14px;
+        }
+        .prime-badge {
+            background: #ffc107;
+            color: #000;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-content">
+                <h2>Select Your Account</h2>
+                <p>Multiple accounts found. Please select yours to receive OTP</p>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="select">
+                        <span class="indicator"></span>
+                        Select User
+                    </button>
+                    <button class="tab-btn" data-tab="verify">
+                        <span class="indicator"></span>
+                        Verify
+                    </button>
+                </div>
+                
+                <div class="user-selection-list" id="user-list">
+                    <!-- Users will be populated here -->
+                </div>
+                
+                <div id="error-message" style="color: #ff4444; font-size: 14px; margin-top: 10px; display: none;"></div>
+                <div id="loading-spinner" style="display: none; text-align: center; margin-top: 10px;">
+                    <span style="color: #ffc107;">Sending OTP...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Use proxy server for API calls
+        var API_BASE_URL = 'http://localhost:3000/api';
+        
+        // Show error message
+        function showError(message) {
+            var errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(function() {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Load and display users
+        window.addEventListener('load', function() {
+            var custdetList = localStorage.getItem('bbnl_custdet_list');
+            
+            if (!custdetList) {
+                showError('Session expired. Please login again.');
+                setTimeout(function() {
+                    window.location.href = 'index.html';
+                }, 2000);
+                return;
+            }
+            
+            var users = JSON.parse(custdetList);
+            var userListDiv = document.getElementById('user-list');
+            
+            users.forEach(function(user, index) {
+                var userCard = document.createElement('div');
+                userCard.className = 'user-card' + (user.isprime === 'yes' ? ' prime' : '');
+                userCard.dataset.index = index;
+                
+                var mobile = user.mobile || 'Not provided';
+                var email = user.email || 'Not provided';
+                var displayName = mobile !== 'Not provided' ? mobile : email;
+                var icon = mobile !== 'Not provided' ? '📱' : '📧';
+                
+                userCard.innerHTML = 
+                    '<div class="user-info">' +
+                        '<div class="user-icon">' + icon + '</div>' +
+                        '<div class="user-details">' +
+                            '<h4>' + displayName + '</h4>' +
+                            '<p>' + (mobile !== 'Not provided' ? 'Mobile' : 'Email') + '</p>' +
+                        '</div>' +
+                        (user.isprime === 'yes' ? '<span class="prime-badge">PRIMARY</span>' : '') +
+                    '</div>';
+                
+                userCard.addEventListener('click', function() {
+                    selectUser(user);
+                });
+                
+                userListDiv.appendChild(userCard);
+            });
+        });
+        
+        // Handle user selection
+        function selectUser(user) {
+            var spinner = document.getElementById('loading-spinner');
+            spinner.style.display = 'block';
+            
+            var userid = localStorage.getItem('bbnl_userid');
+            var deviceInfo = JSON.parse(localStorage.getItem('bbnl_device'));
+            
+            var requestBody = {
+                userid: userid,
+                mobile: user.mobile || '',
+                email: user.email || '',
+                mac_address: deviceInfo.mac_address,
+                device_name: deviceInfo.device_name,
+                ip_address: deviceInfo.ip_address,
+                device_type: deviceInfo.device_type
+            };
+            
+            // Call loginOtp API
+            fetch(API_BASE_URL + '/loginOtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                spinner.style.display = 'none';
+                
+                if (data.status.err_code === 0) {
+                    // OTP sent successfully
+                    localStorage.setItem('bbnl_otp', data.body[0].otpcode);
+                    localStorage.setItem('bbnl_custdet', JSON.stringify(user));
+                    window.location.href = 'verify.html';
+                } else {
+                    showError(data.status.err_msg);
+                }
+            }, function(error) {
+                spinner.style.display = 'none';
+                console.error('OTP error:', error);
+                showError('Network error. Please check your connection and try again.');
+            });
+        }
+        
+        // Initialize remote control
+        document.addEventListener('DOMContentLoaded', function() {
+            RemoteControl.init({
+                focusableSelector: '.user-card, button, a',
+                wrapNavigation: true,
+                autoFocus: false,
+                debug: false
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - OTT Apps</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <!-- Axios for API calls -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Top Header */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 100;
+        }
+
+        .logo-header {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 10px 20px 10px 45px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            font-size: 18px;
+        }
+
+        .header-icon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 100px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+
+        /* Apps Grid */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        /* App Card */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .app-logo-container {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Individual App Backgrounds */
+        .app-card[data-app="jiohotstar"] .app-logo-container {
+            background: linear-gradient(135deg, #4A47D9 0%, #6B4BD9 100%);
+        }
+
+        .app-card[data-app="primevideo"] .app-logo-container {
+            background: linear-gradient(135deg, #00A8E1 0%, #0088C2 100%);
+        }
+
+        .app-card[data-app="netflix"] .app-logo-container {
+            background: linear-gradient(135deg, #221F1F 0%, #000000 100%);
+        }
+
+        .app-card[data-app="appletv"] .app-logo-container {
+            background: linear-gradient(135deg, #000000 0%, #1A1A1A 100%);
+        }
+
+        .app-logo {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+            filter: brightness(1.1);
+        }
+
+        /* Netflix specific styling */
+        .app-card[data-app="netflix"] .app-logo {
+            width: 50%;
+        }
+
+        /* Apple TV specific styling */
+        .app-card[data-app="appletv"] .app-logo {
+            width: 60%;
+        }
+
+        .app-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .app-category {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .apps-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .apps-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .apps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 90px 20px 20px;
+            }
+
+            .top-header {
+                padding: 0 20px;
+            }
+
+            .search-container {
+                margin: 0 20px;
+            }
+        }
+
+        /* Light Mode Overrides */
+        body.light-mode .top-header {
+            background: #ffffff;
+            border-bottom-color: rgba(0, 0, 0, 0.08);
+        }
+
+        body.light-mode .header-icon-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-mode .app-card {
+            background: #ffffff;
+            border-color: rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-mode .app-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            width: 100%;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--accent-color, #4A47D9);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            margin-top: 16px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Error State */
+        .error-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 48px;
+            color: #E53935;
+            margin-bottom: 16px;
+        }
+
+        .error-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .retry-btn {
+            padding: 12px 24px;
+            background: var(--accent-color, #4A47D9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .retry-btn:hover {
+            background: #3A37C9;
+        }
+
+        /* Empty State */
+        .empty-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .empty-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+    </style>
+    <script src="js/script.js"></script>
+</head>
+
+<body class="dark-mode">
+    <!-- Device Info Display -->
+    <div id="deviceInfo"
+        style="position:fixed;top:10px;right:10px;background:rgba(0,0,0,0.8);color:white;padding:15px;border-radius:10px;font-size:16px;z-index:9999;">
+        <p><strong>WiFi MAC:</strong> <span id="wifiMac">Loading...</span></p>
+        <p><strong>Ethernet MAC:</strong> <span id="ethMac">Loading...</span></p>
+        <p><strong>Device ID:</strong> <span id="deviceId">Loading...</span></p>
+        <p><strong>IP:</strong> <span id="ipAddress">Loading...</span></p>
+    </div>
+
+    <!-- Top Header -->
+    <header class="top-header">
+        <div class="logo-header">
+            <span class="logo-icon"><a href="https://bbnl.co.in/plans"></a></span> BBNL
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Search Channels">
+        </div>
+        <div class="header-right">
+            <button class="header-icon-btn" onclick="window.location.href='homepage.html'">
+                <i class="fas fa-home"></i>
+            </button>
+            <button class="header-icon-btn" onclick="window.location.href='notifications.html'">
+                <i class="fas fa-bell"></i>
+            </button>
+            <img src="https://i.pravatar.cc/150?u=alex" alt="User" class="profile-avatar">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div role="main" class="main-content">
+        <h1 class="page-title">OTT Apps</h1>
+
+        <div id="apps-container" class="apps-grid">
+            <!-- Apps will be loaded dynamically from API -->
+            <div class="loading-container">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Loading OTT Apps...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // OTT Apps API Configuration - Using proxy for authentication
+        var PROXY_URL = 'http://localhost:3000/api';
+        var OTT_APPS_API = PROXY_URL + '/allowedapps';
+
+        // App background colors mapping
+        var appBackgrounds = {
+            'jiohotstar': 'linear-gradient(135deg, #4A47D9 0%, #6B4BD9 100%)',
+            'hotstar': 'linear-gradient(135deg, #4A47D9 0%, #6B4BD9 100%)',
+            'primevideo': 'linear-gradient(135deg, #00A8E1 0%, #0088C2 100%)',
+            'prime': 'linear-gradient(135deg, #00A8E1 0%, #0088C2 100%)',
+            'amazon': 'linear-gradient(135deg, #00A8E1 0%, #0088C2 100%)',
+            'netflix': 'linear-gradient(135deg, #221F1F 0%, #000000 100%)',
+            'appletv': 'linear-gradient(135deg, #000000 0%, #1A1A1A 100%)',
+            'apple': 'linear-gradient(135deg, #000000 0%, #1A1A1A 100%)',
+            'youtube': 'linear-gradient(135deg, #FF0000 0%, #CC0000 100%)',
+            'zee5': 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)',
+            'sonyliv': 'linear-gradient(135deg, #000000 0%, #1A1A1A 100%)',
+            'voot': 'linear-gradient(135deg, #FF5722 0%, #E64A19 100%)',
+            'jiocinema': 'linear-gradient(135deg, #E91E63 0%, #C2185B 100%)',
+            'mxplayer': 'linear-gradient(135deg, #00BCD4 0%, #0097A7 100%)',
+            'alt': 'linear-gradient(135deg, #F44336 0%, #D32F2F 100%)',
+            'eros': 'linear-gradient(135deg, #9C27B0 0%, #7B1FA2 100%)',
+            'discovery': 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)',
+            'default': 'linear-gradient(135deg, #424242 0%, #212121 100%)'
+        };
+
+        // Get background color for app
+        function getAppBackground(appName) {
+            var name = (appName || '').toLowerCase().replace(/[\s\-_]/g, '');
+            for (var key in appBackgrounds) {
+                if (name.indexOf(key) !== -1) {
+                    return appBackgrounds[key];
+                }
+            }
+            return appBackgrounds['default'];
+        }
+
+        // Generate default app icon SVG
+        function getDefaultAppIcon() {
+            return '<svg class="app-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
+                '<rect x="15" y="25" width="70" height="50" rx="5" fill="white" opacity="0.9"/>' +
+                '<circle cx="50" cy="50" r="12" fill="rgba(255,255,255,0.3)" stroke="white" stroke-width="2"/>' +
+                '<polygon points="46,44 46,56 58,50" fill="white"/>' +
+                '</svg>';
+        }
+
+        // Create app card HTML
+        function createAppCard(app) {
+            var appName = app.app_name || app.name || app.title || 'Unknown App';
+            var appId = (appName || '').toLowerCase().replace(/[\s\-_]/g, '');
+            var appCategory = app.category || app.type || 'Streaming Service';
+            var appIcon = app.icon || app.logo || app.image || '';
+            var appUrl = app.url || app.link || app.deep_link || '#';
+            var appPackage = app.package_name || app.package || '';
+
+            var card = document.createElement('div');
+            card.className = 'app-card';
+            card.setAttribute('data-app', appId);
+            card.setAttribute('data-url', appUrl);
+            card.setAttribute('data-package', appPackage);
+
+            var logoContainer = document.createElement('div');
+            logoContainer.className = 'app-logo-container';
+            logoContainer.style.background = getAppBackground(appName);
+
+            if (appIcon && appIcon.length > 0) {
+                var img = document.createElement('img');
+                img.className = 'app-logo';
+                img.src = appIcon;
+                img.alt = appName;
+                img.onerror = function () {
+                    this.parentNode.innerHTML = getDefaultAppIcon();
+                };
+                logoContainer.appendChild(img);
+            } else {
+                logoContainer.innerHTML = getDefaultAppIcon();
+            }
+
+            var nameDiv = document.createElement('div');
+            nameDiv.className = 'app-name';
+            nameDiv.textContent = appName;
+
+            var categoryDiv = document.createElement('div');
+            categoryDiv.className = 'app-category';
+            categoryDiv.textContent = appCategory;
+
+            card.appendChild(logoContainer);
+            card.appendChild(nameDiv);
+            card.appendChild(categoryDiv);
+
+            // Click handler
+            card.addEventListener('click', function () {
+                launchApp(app);
+            });
+
+            return card;
+        }
+
+        // Launch app function
+        function launchApp(app) {
+            var appName = app.app_name || app.name || app.title || 'App';
+            var appUrl = app.url || app.link || app.deep_link || '';
+            var appPackage = app.package_name || app.package || '';
+
+            console.log('Launching app:', appName, 'URL:', appUrl, 'Package:', appPackage);
+
+            // Try to launch using Tizen app control (for Samsung TV)
+            if (typeof tizen !== 'undefined' && tizen.application) {
+                try {
+                    var appControl = new tizen.ApplicationControl(
+                        'http://tizen.org/appcontrol/operation/view',
+                        appUrl || null,
+                        null,
+                        null
+                    );
+
+                    if (appPackage) {
+                        tizen.application.launchAppControl(
+                            appControl,
+                            appPackage,
+                            function () { console.log('App launched successfully'); },
+                            function (e) {
+                                console.log('Launch failed, trying URL:', e);
+                                if (appUrl) window.location.href = appUrl;
+                            }
+                        );
+                    } else if (appUrl) {
+                        window.location.href = appUrl;
+                    } else {
+                        alert('Opening ' + appName + '...');
+                    }
+                } catch (e) {
+                    console.error('Tizen launch error:', e);
+                    if (appUrl) window.location.href = appUrl;
+                    else alert('Opening ' + appName + '...');
+                }
+            } else {
+                // Web browser fallback
+                if (appUrl && appUrl !== '#') {
+                    window.open(appUrl, '_blank');
+                } else {
+                    alert('Opening ' + appName + '...');
+                }
+            }
+        }
+
+        // Show loading state
+        function showLoading() {
+            var container = document.getElementById('apps-container');
+            container.innerHTML = '<div class="loading-container">' +
+                '<div class="loading-spinner"></div>' +
+                '<div class="loading-text">Loading OTT Apps...</div>' +
+                '</div>';
+        }
+
+        // Show error state
+        function showError(message) {
+            var container = document.getElementById('apps-container');
+            container.innerHTML = '<div class="error-container">' +
+                '<div class="error-icon"><i class="fas fa-exclamation-circle"></i></div>' +
+                '<div class="error-message">' + (message || 'Failed to load apps. Please try again.') + '</div>' +
+                '<button class="retry-btn" onclick="loadOTTApps()">Retry</button>' +
+                '</div>';
+        }
+
+        // Show empty state
+        function showEmpty() {
+            var container = document.getElementById('apps-container');
+            container.innerHTML = '<div class="empty-container">' +
+                '<div class="empty-icon"><i class="fas fa-tv"></i></div>' +
+                '<div class="empty-message">No OTT apps available at the moment.</div>' +
+                '</div>';
+        }
+
+        // Render apps
+        function renderApps(apps) {
+            var container = document.getElementById('apps-container');
+            container.innerHTML = '';
+
+            if (!apps || apps.length === 0) {
+                showEmpty();
+                return;
+            }
+
+            apps.forEach(function (app) {
+                var card = createAppCard(app);
+                container.appendChild(card);
+            });
+
+            // Reinitialize remote control for new elements
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.app-card, .category-item, .nav-icon, button, a, .retry-btn',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        }
+
+        // Load OTT Apps from API
+        function loadOTTApps() {
+            showLoading();
+
+            // Use POST method for proxy server
+            axios.post(OTT_APPS_API, {}, {
+                timeout: 15000,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(function (response) {
+                console.log('OTT Apps API Response:', response.data);
+
+                var data = response.data;
+
+                // Check for API error
+                if (data.status && data.status.err_code !== 0) {
+                    console.warn('API Error:', data.status.err_msg);
+                    // If authentication fails, show fallback apps
+                    if (data.status.err_code === 1) {
+                        loadFallbackApps();
+                        return;
+                    }
+                    showError(data.status.err_msg || 'Failed to load apps');
+                    return;
+                }
+
+                // Get apps array from response
+                var apps = data.apps || data.data || data.result || [];
+
+                if (apps.length === 0) {
+                    // Load fallback apps if API returns empty
+                    loadFallbackApps();
+                    return;
+                }
+
+                renderApps(apps);
+            }, function(error) {
+                // Error handler (ES5 compatible - no .catch())
+                console.error('Failed to load apps from API:', error);
+                // Load fallback apps on error
+                loadFallbackApps();
+            });
+        }
+
+        // Fallback apps when API fails
+        function loadFallbackApps() {
+            console.log('Loading fallback OTT apps...');
+
+            var fallbackApps = [
+                { app_name: 'JioHotstar', category: 'Streaming Service', url: 'https://www.hotstar.com' },
+                { app_name: 'Prime Video', category: 'Streaming Service', url: 'https://www.primevideo.com' },
+                { app_name: 'Netflix', category: 'Streaming Service', url: 'https://www.netflix.com' },
+                { app_name: 'Apple TV+', category: 'Streaming Service', url: 'https://tv.apple.com' },
+                { app_name: 'YouTube', category: 'Video Platform', url: 'https://www.youtube.com' },
+                { app_name: 'ZEE5', category: 'Streaming Service', url: 'https://www.zee5.com' },
+                { app_name: 'SonyLIV', category: 'Streaming Service', url: 'https://www.sonyliv.com' },
+                { app_name: 'Voot', category: 'Streaming Service', url: 'https://www.voot.com' },
+                { app_name: 'JioCinema', category: 'Streaming Service', url: 'https://www.jiocinema.com' },
+                { app_name: 'MX Player', category: 'Video Player', url: 'https://www.mxplayer.in' },
+                { app_name: 'Discovery+', category: 'Streaming Service', url: 'https://www.discoveryplus.in' },
+                { app_name: 'ALTBalaji', category: 'Streaming Service', url: 'https://www.altbalaji.com' }
+            ];
+
+            renderApps(fallbackApps);
+        }
+
+        // Search functionality
+        function filterApps(searchTerm) {
+            var cards = document.querySelectorAll('.app-card');
+            var term = searchTerm.toLowerCase();
+
+            cards.forEach(function (card) {
+                var appName = card.querySelector('.app-name').textContent.toLowerCase();
+                var appCategory = card.querySelector('.app-category').textContent.toLowerCase();
+
+                if (appName.indexOf(term) !== -1 || appCategory.indexOf(term) !== -1) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Get Device Info (Tizen TV)
+        function getDeviceInfo() {
+            try {
+                // 1. WiFi MAC Address
+                try {
+                    if (typeof webapis !== 'undefined' && webapis.network) {
+                        var wifiMac = webapis.network.getMacAddress('WIFI');
+                        document.getElementById('wifiMac').innerText = wifiMac || 'N/A';
+                        console.log('✅ WiFi MAC:', wifiMac);
+                    } else {
+                        document.getElementById('wifiMac').innerText = 'N/A';
+                    }
+                } catch (e) {
+                    document.getElementById('wifiMac').innerText = 'N/A';
+                    console.log('❌ WiFi MAC Error:', e.message);
+                }
+
+                // 2. Ethernet MAC Address  
+                try {
+                    if (typeof webapis !== 'undefined' && webapis.network) {
+                        var ethMac = webapis.network.getMacAddress('ETHERNET');
+                        document.getElementById('ethMac').innerText = ethMac || 'N/A';
+                        console.log('✅ Ethernet MAC:', ethMac);
+                    } else {
+                        document.getElementById('ethMac').innerText = 'N/A';
+                    }
+                } catch (e) {
+                    document.getElementById('ethMac').innerText = 'N/A';
+                    console.log('❌ Ethernet MAC Error:', e.message);
+                }
+
+                // 3. Device ID
+                if (typeof tizen !== 'undefined' && tizen.systeminfo) {
+                    var deviceId = tizen.systeminfo.getCapability('http://tizen.org/system/tizenid');
+                    document.getElementById('deviceId').innerText = deviceId || 'N/A';
+                    console.log('✅ Device ID:', deviceId);
+
+                    // 4. IP Address
+                    tizen.systeminfo.getPropertyValue('WIFI_NETWORK', function (network) {
+                        document.getElementById('ipAddress').innerText = network.ipAddress || 'N/A';
+                        console.log('✅ IP Address:', network.ipAddress);
+                    }, function (error) {
+                        console.log('WiFi not available, trying ETHERNET...');
+                        tizen.systeminfo.getPropertyValue('ETHERNET_NETWORK', function (network) {
+                            document.getElementById('ipAddress').innerText = network.ipAddress || 'N/A';
+                            console.log('✅ IP Address (Ethernet):', network.ipAddress);
+                        }, function (err) {
+                            document.getElementById('ipAddress').innerText = 'N/A';
+                            console.log('❌ Network error:', err.message);
+                        });
+                    });
+                } else {
+                    // Not on Tizen - show browser info
+                    document.getElementById('deviceId').innerText = 'Browser Mode';
+                    document.getElementById('ipAddress').innerText = 'N/A (Web)';
+                    console.log('ℹ️ Not running on Tizen TV');
+                }
+            } catch (e) {
+                console.error('❌ Device Info Error:', e.message);
+                document.getElementById('deviceId').innerText = 'Error';
+                document.getElementById('ipAddress').innerText = 'Error';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Get device info
+            getDeviceInfo();
+
+            // Load apps from API
+            loadOTTApps();
+
+            // Setup search functionality
+            var searchInput = document.querySelector('.search-container input');
+            if (searchInput) {
+                searchInput.placeholder = 'Search Apps';
+                searchInput.addEventListener('input', function () {
+                    filterApps(this.value);
+                });
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.app-card, .category-item, .nav-icon, button, a, .retry-btn',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+</body>
+</html>

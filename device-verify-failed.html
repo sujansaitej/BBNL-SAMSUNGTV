@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Login</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/cards.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/auth.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <script src="js/script.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-content">
+                <h2>Enter Verification Code</h2>
+                <p>We've sent a 6-digit code to your@gmail.com</p>
+                
+                <div class="auth-tabs">
+                    <button class="tab-btn" data-tab="phone">
+                        <span class="indicator"></span>
+                        Phone
+                    </button>
+                    <button class="tab-btn active" data-tab="verify">
+                        <span class="indicator"></span>
+                        Verify
+                    </button>
+                </div>
+                
+                <form class="auth-form" action="profiles.html" method="get">
+                    <div class="otp-input-group">
+                        <input name="otp1" type="text" class="otp-input" maxlength="1" autocomplete="off">
+                        <input name="otp2" type="text" class="otp-input" maxlength="1" autocomplete="off">
+                        <input name="otp3" type="text" class="otp-input" maxlength="1" autocomplete="off">
+                        <input name="otp4" type="text" class="otp-input" maxlength="1" autocomplete="off">
+                        <input name="otp5" type="text" class="otp-input" maxlength="1" autocomplete="off">
+                        <input name="otp6" type="text" class="otp-input" maxlength="1" autocomplete="off">
+                    </div>
+                    <p class="otp-timer">Didn't receive the code? <span style="color:#ffc107;">00:59</span></p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // ES5 Compatible OTP Input handling
+        var otpInputs = document.querySelectorAll('.otp-input');
+        var form = document.querySelector('.auth-form');
+
+        for (var oi = 0; oi < otpInputs.length; oi++) {
+            (function(index) {
+                var input = otpInputs[index];
+                input.addEventListener('input', function(e) {
+                    if (input.value) {
+                        if (index < otpInputs.length - 1) {
+                            otpInputs[index + 1].focus();
+                        } else {
+                            form.submit();
+                        }
+                    }
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !input.value && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+            })(oi);
+        }
+        
+        // Initialize remote control
+        document.addEventListener('DOMContentLoaded', function() {
+            RemoteControl.init({
+                focusableSelector: '.otp-input, button, a',
+                wrapNavigation: true,
+                autoFocus: false,
+                debug: false
+            });
+        });
+    </script>
+</body>
+</html>

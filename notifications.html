@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Notifications</title>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Layout Styles -->
+    <link rel="stylesheet" href="css/layout/header.css">
+    <link rel="stylesheet" href="css/layout/sidebar.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <!-- Page Styles -->
+    <link rel="stylesheet" href="css/pages/notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <script src="js/script.js"></script>
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="logo">BBNL</h1>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="homepage.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="notifications.html" class="nav-item active">
+                    <i class="fas fa-bell"></i>
+                    <span>Notification</span>
+                </a>
+                <a href="give-feedback.html" class="nav-item">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>Give Feedback</span>
+                </a>
+                <a href="help-desk.html" class="nav-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Help Desk</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div role="main" class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" placeholder="Search notifications">
+                </div>
+
+                <div class="header-controls">
+                    <button class="header-icon-btn" onclick="window.location.href='homepage.html'"><i
+                            class="fas fa-home"></i></button>
+                    <button class="header-icon-btn" onclick="window.location.href='notifications.html'"><i
+                            class="fas fa-bell"></i></button>
+                    <div class="profile-menu">
+                        <img src="https://i.pravatar.cc/150?u=alex" alt="User" id="current-profile-avatar"
+                            style="width: 32px; height: 32px; border-radius: 50%;">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Notifications Section -->
+            <section class="content-section">
+                <div class="notifications-container">
+                    <div class="notification-list">
+                        <!-- Item 1 -->
+                        <div class="notification-item">
+                            <div class="notification-icon-box">
+                                <i class="fas fa-play"></i>
+                            </div>
+                            <div class="notification-content">
+                                <h3>New episode: Peacemaker S3E2 is now available</h3>
+                                <p>New episode alert</p>
+                            </div>
+                            <div class="notification-time">5 mins ago</div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="notification-item">
+                            <div class="notification-icon-box">
+                                <i class="fas fa-thumbs-up"></i>
+                            </div>
+                            <div class="notification-content">
+                                <h3>Watch: The Boys, you might like this...</h3>
+                                <p>Content Recommendation</p>
+                            </div>
+                            <div class="notification-time">2 hrs ago</div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="notification-item">
+                            <div class="notification-icon-box">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div class="notification-content">
+                                <h3>Colors TV subscription is ending in 2 days</h3>
+                                <p>Subscription Reminder</p>
+                            </div>
+                            <div class="notification-time">yesterday</div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="notification-item">
+                            <div class="notification-icon-box">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="notification-content">
+                                <h3>Password reset Successful</h3>
+                                <p>Security alert</p>
+                            </div>
+                            <div class="notification-time">2 days ago</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check authentication - redirect to login if not authenticated
+            if (typeof AuthAPI !== 'undefined' && !AuthAPI.isAuthenticated()) {
+                console.warn('⚠️ Authentication required - redirecting to login');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Initialize remote control
+            if (typeof RemoteControl !== 'undefined') {
+                RemoteControl.init({
+                    focusableSelector: '.notification-item, .sidebar-menu-item, .tab-btn, button, a',
+                    wrapNavigation: true,
+                    autoFocus: false,
+                    debug: false
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

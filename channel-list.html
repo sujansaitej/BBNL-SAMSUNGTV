@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBNL - Channel List</title>
+    <!-- Tizen Web APIs (MUST be first script for Samsung TV) -->
+    <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+    <!-- Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="css/base/variable.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <!-- Component Styles -->
+    <link rel="stylesheet" href="css/componentes/buttons.css">
+    <link rel="stylesheet" href="css/componentes/remote.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Remote Control -->
+    <script src="js/remote.js"></script>
+    <!-- API Files -->
+    <script src="api/config.js"></script>
+    <script src="api/auth.js"></script>
+    <script src="api/channels.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            width: 320px;
+            min-width: 320px;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            z-index: 10;
+        }
+
+        /* Current Channel Header */
+        .current-channel-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .current-channel-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .current-channel-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .current-channel-logo img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .current-channel-details {
+            flex: 1;
+        }
+
+        .current-channel-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .current-channel-number {
+            color: #888;
+            font-weight: 400;
+        }
+
+        .current-program {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* Search Box */
+        .search-container {
+            padding: 15px 20px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus-within {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .search-box i {
+            color: #888;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .search-box input::placeholder {
+            color: #666;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 0 20px 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .filter-tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .filter-tab.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+
+        .filter-tab:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Channel List */
+        .channel-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 10px;
+        }
+
+        .channel-list-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .channel-list-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .channel-list-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+
+        /* Channel Item */
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .channel-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .channel-item:focus {
+            outline: none;
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .channel-item.active,
+        .channel-item.remote-focused {
+            background: rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+        }
+
+        .channel-item-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .channel-item-logo img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+        }
+
+        .channel-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .channel-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .channel-item-program {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .channel-item-number {
+            font-size: 14px;
+            color: #888;
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        /* Navigation Hints */
+        .nav-hints {
+            padding: 15px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .nav-hint i {
+            font-size: 11px;
+        }
+
+        /* ==================== CONTENT AREA ==================== */
+        .content-area {
+            flex: 1;
+            background: #000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-placeholder {
+            text-align: center;
+            color: #444;
+        }
+
+        .preview-placeholder i {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .preview-placeholder p {
+            font-size: 18px;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ==================== LOADING STATE ==================== */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================== ERROR STATES ==================== */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .error-screen.show {
+            display: flex;
+        }
+
+        .error-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 40px 60px;
+            text-align: center;
+            max-width: 450px;
+        }
+
+        .error-icon {
+            width: 80px;
+            height: 80px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .error-icon i {
+            font-size: 36px;
+            color: #ef4444;
+        }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .error-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .error-btn {
+            background: #f5c518;
+            color: #222;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .error-btn:hover,
+        .error-btn:focus {
+            background: #e6b800;
+            outline: 3px solid #fff;
+            transform: scale(1.02);
+        }
+
+        /* Login Required */
+        .login-required-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .login-required-overlay.show {
+            display: flex;
+        }
+
+        .login-card {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .login-card i {
+            font-size: 60px;
+            color: #3b82f6;
+            margin-bottom: 20px;
+        }
+
+        .login-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .login-card p {
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .login-btn {
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-btn:focus {
+            outline: 3px solid #fff;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .no-results i {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Current Channel Header -->
+            <div class="current-channel-header">
+                <div class="current-channel-info">
+                    <div class="current-channel-logo" id="current-logo">
+                        <i class="fas fa-tv" style="color: #666;"></i>
+                    </div>
+                    <div class="current-channel-details">
+                        <div class="current-channel-name">
+                            <span id="current-name">Select a Channel</span>
+                            <span class="current-channel-number" id="current-number"></span>
+                        </div>
+                        <div class="current-program" id="current-program">Browse channels below</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search Channel" id="search-input" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs" id="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="subscribed">Subscribed</button>
+                <button class="filter-tab" data-filter="kids">Kids</button>
+                <button class="filter-tab" data-filter="news">News</button>
+                <button class="filter-tab" data-filter="sports">Sports</button>
+            </div>
+
+            <!-- Channel List -->
+            <div class="channel-list-container" id="channel-list-container">
+                <!-- Loading -->
+                <div id="loading-state" class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading channels...</p>
+                </div>
+
+                <!-- Channel List will be populated here -->
+                <div id="channel-list"></div>
+
+                <!-- No Results -->
+                <div id="no-results" class="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <p>No channels found</p>
+                </div>
+            </div>
+
+            <!-- Navigation Hints -->
+            <div class="nav-hints">
+                <div class="nav-hint">
+                    <i class="fas fa-chevron-up"></i>
+                    <i class="fas fa-chevron-down"></i>
+                    <span>Navigate</span>
+                </div>
+                <div class="nav-hint">
+                    <i class="fas fa-arrow-right"></i>
+                    <span>Select</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area" id="content-area">
+            <div class="preview-placeholder">
+                <i class="fas fa-tv"></i>
+                <p>Select a channel to preview</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error: No Internet -->
+    <div id="error-no-internet" class="error-screen">
+        <div class="error-card">
+            <div class="error-icon">
+                <i class="fas fa-wifi"></i>
+            </div>
+            <h2 class="error-title">No Internet Connection</h2>
+            <p class="error-subtitle">Please check your network and try again</p>
+            <button class="error-btn" onclick="retryLoadChannels()">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Error: Load Failed -->
+    <div id="error-load-failed" class="error-screen">
+        <div class="error-card">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="error-title">Failed to Load Channels</h2>
+            <p class="error-subtitle">Something went wrong. Please try again.</p>
+            <button class="error-btn" onclick="retryLoadChannels()">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Login Required -->
+    <div id="login-required" class="login-required-overlay">
+        <div class="login-card">
+            <i class="fas fa-lock"></i>
+            <h3>Login Required</h3>
+            <p>Please login to view channels</p>
+            <button class="login-btn" onclick="window.location.href='index.html'">Go to Login</button>
+        </div>
+    </div>
+
+    <script>
+        // ==================== STATE ====================
+        var allChannels = [];
+        var filteredChannels = [];
+        var categories = [];
+        var currentFilter = 'all';
+        var selectedIndex = 0;
+        var currentChannel = null;
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!AuthAPI.isAuthenticated()) {
+                document.getElementById('loading-state').style.display = 'none';
+                document.getElementById('login-required').classList.add('show');
+                return;
+            }
+
+            // Initialize remote control
+            RemoteControl.init({
+                focusableSelector: '.channel-item, .filter-tab, .search-box input, .error-btn, .login-btn',
+                wrapNavigation: true,
+                autoFocus: false,
+                debug: false
+            });
+
+            // Load channels
+            loadChannels();
+
+            // Setup search
+            setupSearch();
+
+            // Setup filter tabs
+            setupFilterTabs();
+        });
+
+        // ==================== LOAD CHANNELS ====================
+        function loadChannels() {
+            document.getElementById('loading-state').style.display = 'flex';
+            document.getElementById('channel-list').innerHTML = '';
+            document.getElementById('no-results').style.display = 'none';
+            hideAllErrors();
+
+            // Load categories first, then channels
+            ChannelsAPI.getCategories().then(function(catResult) {
+                if (catResult.success) {
+                    categories = catResult.categories;
+                    updateFilterTabs(categories);
+                }
+
+                // Load channel data
+                return ChannelsAPI.getChannelData();
+            }).then(function(result) {
+                document.getElementById('loading-state').style.display = 'none';
+
+                if (result.success) {
+                    allChannels = result.channels;
+                    filteredChannels = allChannels;
+                    renderChannelList(filteredChannels);
+                    
+                    // Focus first channel
+                    if (filteredChannels.length > 0) {
+                        setTimeout(function() {
+                            var firstItem = document.querySelector('.channel-item');
+                            if (firstItem) {
+                                firstItem.focus();
+                                RemoteControl.setFocus(firstItem);
+                                selectChannel(0);
+                            }
+                        }, 100);
+                    }
+                } else {
+                    showError(result.errorType || 'load-failed');
+                }
+            }, function(error) {
+                // Error handler (ES5 compatible - no .catch())
+                document.getElementById('loading-state').style.display = 'none';
+                console.error('Error loading channels:', error);
+                showError('load-failed');
+            });
+        }
+
+        // ==================== RENDER CHANNEL LIST ====================
+        function renderChannelList(channels) {
+            var container = document.getElementById('channel-list');
+            container.innerHTML = '';
+
+            if (channels.length === 0) {
+                document.getElementById('no-results').style.display = 'block';
+                return;
+            }
+
+            document.getElementById('no-results').style.display = 'none';
+
+            channels.forEach(function(channel, index) {
+                var item = document.createElement('div');
+                item.className = 'channel-item';
+                item.tabIndex = 0;
+                item.setAttribute('data-index', index);
+
+                // Channel number (pad to 3 digits)
+                var channelNum = String(index + 1).padStart(3, '0');
+
+                // Logo
+                var logoHtml = channel.chlogo 
+                    ? '<img src="' + channel.chlogo + '" alt="' + (channel.chtitle || 'Channel') + '" onerror="this.parentElement.innerHTML=\'<i class=\\\'fas fa-tv\\\' style=\\\'color:#666;font-size:20px;\\\'></i>\'">'
+                    : '<i class="fas fa-tv" style="color:#666;font-size:20px;"></i>';
+
+                // Program info (mock for now - can be replaced with EPG data)
+                var programInfo = 'Now Playing: ' + (channel.currentProgram || 'Live TV');
+
+                item.innerHTML = 
+                    '<div class="channel-item-logo">' + logoHtml + '</div>' +
+                    '<div class="channel-item-info">' +
+                        '<div class="channel-item-name">' + (channel.chtitle || 'Unknown Channel') + '</div>' +
+                        '<div class="channel-item-program">' + programInfo + '</div>' +
+                    '</div>' +
+                    '<div class="channel-item-number">' + channelNum + '</div>';
+
+                // Click handler
+                item.addEventListener('click', function() {
+                    playChannel(index);
+                });
+
+                // Focus handler
+                item.addEventListener('focus', function() {
+                    selectChannel(index);
+                });
+
+                // Keyboard handler
+                item.addEventListener('keydown', function(e) {
+                    if (e.keyCode === 13) { // Enter
+                        playChannel(index);
+                        e.preventDefault();
+                    }
+                });
+
+                container.appendChild(item);
+            });
+
+            // Update remote focusable elements
+            RemoteControl.updateFocusableElements();
+        }
+
+        // ==================== SELECT CHANNEL (PREVIEW) ====================
+        function selectChannel(index) {
+            selectedIndex = index;
+            var channel = filteredChannels[index];
+            
+            if (!channel) return;
+
+            currentChannel = channel;
+
+            // Update current channel header
+            var logoContainer = document.getElementById('current-logo');
+            if (channel.chlogo) {
+                logoContainer.innerHTML = '<img src="' + channel.chlogo + '" alt="' + channel.chtitle + '" onerror="this.parentElement.innerHTML=\'<i class=\\\'fas fa-tv\\\' style=\\\'color:#666;\\\'></i>\'">';
+            } else {
+                logoContainer.innerHTML = '<i class="fas fa-tv" style="color:#666;"></i>';
+            }
+
+            document.getElementById('current-name').textContent = channel.chtitle || 'Unknown Channel';
+            document.getElementById('current-number').textContent = String(index + 1).padStart(3, '0');
+            document.getElementById('current-program').textContent = 'Now Playing: ' + (channel.currentProgram || 'Live TV');
+
+            // Update active state
+            var items = document.querySelectorAll('.channel-item');
+            items.forEach(function(item, i) {
+                item.classList.toggle('active', i === index);
+            });
+
+            // Show preview image or placeholder
+            var contentArea = document.getElementById('content-area');
+            if (channel.chlogo) {
+                contentArea.innerHTML = '<img src="' + channel.chlogo + '" class="preview-image" style="object-fit:contain;background:#111;" alt="' + channel.chtitle + '">';
+            }
+        }
+
+        // ==================== PLAY CHANNEL ====================
+        function playChannel(index) {
+            var channel = filteredChannels[index];
+            if (!channel) return;
+
+            console.log('Playing channel:', channel.chtitle);
+
+            // Use ChannelsAPI to play
+            var result = ChannelsAPI.playChannel(channel);
+            
+            if (!result.success) {
+                alert(result.message || 'Cannot play this channel');
+            }
+        }
+
+        // ==================== SEARCH ====================
+        function setupSearch() {
+            var searchInput = document.getElementById('search-input');
+            var searchTimeout = null;
+
+            searchInput.addEventListener('input', function(e) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    var query = e.target.value.toLowerCase().trim();
+                    filterChannels(query);
+                }, 300);
+            });
+
+            // Clear search on escape
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.keyCode === 27) { // Escape
+                    searchInput.value = '';
+                    filterChannels('');
+                }
+            });
+        }
+
+        function filterChannels(query) {
+            if (!query) {
+                applyFilter(currentFilter);
+                return;
+            }
+
+            filteredChannels = allChannels.filter(function(channel) {
+                var title = (channel.chtitle || '').toLowerCase();
+                var number = String(allChannels.indexOf(channel) + 1);
+                return title.indexOf(query) !== -1 || number.indexOf(query) !== -1;
+            });
+
+            renderChannelList(filteredChannels);
+        }
+
+        // ==================== FILTER TABS ====================
+        function setupFilterTabs() {
+            var tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    var filter = tab.getAttribute('data-filter');
+                    setActiveFilter(filter);
+                    applyFilter(filter);
+                });
+            });
+        }
+
+        function updateFilterTabs(categories) {
+            // Could dynamically update tabs based on API categories
+            // For now, keep the static tabs
+        }
+
+        function setActiveFilter(filter) {
+            currentFilter = filter;
+            var tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(function(tab) {
+                tab.classList.toggle('active', tab.getAttribute('data-filter') === filter);
+            });
+        }
+
+        function applyFilter(filter) {
+            var searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+
+            switch(filter) {
+                case 'subscribed':
+                    filteredChannels = ChannelsAPI.getSubscribedChannels(allChannels);
+                    break;
+                case 'kids':
+                    filteredChannels = allChannels.filter(function(ch) {
+                        var title = (ch.chtitle || '').toLowerCase();
+                        return title.indexOf('kid') !== -1 || title.indexOf('cartoon') !== -1 || 
+                               title.indexOf('nick') !== -1 || title.indexOf('disney') !== -1 ||
+                               title.indexOf('pogo') !== -1 || title.indexOf('hungama') !== -1;
+                    });
+                    break;
+                case 'news':
+                    filteredChannels = allChannels.filter(function(ch) {
+                        var title = (ch.chtitle || '').toLowerCase();
+                        return title.indexOf('news') !== -1 || title.indexOf('ndtv') !== -1 ||
+                               title.indexOf('times') !== -1 || title.indexOf('india today') !== -1;
+                    });
+                    break;
+                case 'sports':
+                    filteredChannels = allChannels.filter(function(ch) {
+                        var title = (ch.chtitle || '').toLowerCase();
+                        return title.indexOf('sport') !== -1 || title.indexOf('star sports') !== -1 ||
+                               title.indexOf('espn') !== -1 || title.indexOf('cricket') !== -1;
+                    });
+                    break;
+                default:
+                    filteredChannels = allChannels;
+            }
+
+            // Apply search filter on top
+            if (searchQuery) {
+                filteredChannels = filteredChannels.filter(function(ch) {
+                    var title = (ch.chtitle || '').toLowerCase();
+                    return title.indexOf(searchQuery) !== -1;
+                });
+            }
+
+            renderChannelList(filteredChannels);
+
+            // Focus first channel if available
+            if (filteredChannels.length > 0) {
+                setTimeout(function() {
+                    var firstItem = document.querySelector('.channel-item');
+                    if (firstItem) {
+                        firstItem.focus();
+                        selectChannel(0);
+                    }
+                }, 100);
+            }
+        }
+
+        // ==================== ERROR HANDLING ====================
+        function hideAllErrors() {
+            document.getElementById('error-no-internet').classList.remove('show');
+            document.getElementById('error-load-failed').classList.remove('show');
+            document.getElementById('login-required').classList.remove('show');
+        }
+
+        function showError(type) {
+            hideAllErrors();
+            
+            switch(type) {
+                case 'no-internet':
+                    document.getElementById('error-no-internet').classList.add('show');
+                    break;
+                case 'login-required':
+                    document.getElementById('login-required').classList.add('show');
+                    break;
+                default:
+                    document.getElementById('error-load-failed').classList.add('show');
+            }
+        }
+
+        function retryLoadChannels() {
+            hideAllErrors();
+            loadChannels();
+        }
+    </script>
+</body>
+
+</html>
